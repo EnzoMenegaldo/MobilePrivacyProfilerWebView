@@ -1,13 +1,25 @@
 <template>
   <div id="app">
-    <img src="./assets/logo.png">
-    <router-view/>
+    <header-section/>
+
+    <div class="main">
+      <transition name="fade" mode="out-in">
+        <keep-alive>
+          <router-view/>
+        </keep-alive>
+      </transition>
+    </div>
   </div>
 </template>
 
 <script>
+import HeaderSection from '@/components/HeaderSection.vue'
+
 export default {
-  name: 'App'
+  name: 'App',
+  components: {
+    HeaderSection
+  }
 }
 </script>
 

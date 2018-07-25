@@ -13,7 +13,7 @@ export default {
   name: 'Menu',
   data () {
     return {
-      users: []
+      users: [{ '_id': 0, 'userId': 'Server connection failed' }]
     }
   },
   mounted () {

@@ -22,11 +22,12 @@ app.post('/Users', (req, res) => {
         (error, row) =>
             (res.send(row))
     )
-    db.close((err) => {if(err==null)
-    {console.log('Connection closed')}
-    else {console.error(err.message)}
+    db.close((err) => {
+        if(err==null) {console.log('Connection closed')}
+        else {console.error(err.message)
+        }
     })
-    })
+})
 
 
 app.listen(process.env.PORT || 8081)
