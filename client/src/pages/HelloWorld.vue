@@ -1,5 +1,7 @@
 <template>
   <div class="hello">
+    <div class="spacer"></div>
+    <div class="spacer"></div>
     <h1>{{ msg }}</h1>
     <h2>Application web de consultation des données de l'étude Mobile Privacy</h2>
   </div>
@@ -18,6 +20,10 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.spacer
+{
+  height: 40px;
+}
 h1, h2 {
   font-weight: normal;
 }

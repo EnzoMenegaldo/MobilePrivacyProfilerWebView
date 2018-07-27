@@ -4,7 +4,7 @@
       <div class="header__content">
         <router-link to="/" >
           <container>
-            <b-row  align-v="center">
+            <b-row  align-v="center" align-h="center">
               <b-col>
                 <img src=".././assets/droid-icon.png" height="45px" @click="changeActiveTab()">
               </b-col>
@@ -64,7 +64,7 @@ text-decoration:none;
       display: table;
       margin: 0;
       height: 60px;
-      background: #f05724;
+      background: #194bfa;
       text-align: center;
       color: #fff;
       width: 100%;

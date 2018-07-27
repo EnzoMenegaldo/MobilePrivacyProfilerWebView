@@ -1,6 +1,6 @@
 <template>
   <container>
-    <b-row>
+    <b-row align-v="center" align-h="center">
       <b-col></b-col>
       <b-col></b-col>
       <nav class="nav" v-if="tabActive !== ''">
@@ -77,12 +77,12 @@ export default {
      text-transform: uppercase;
      text-decoration: none;
      padding: 10px;
-     background-color: #f05724;
+     background-color: #194bfa;
      color: #fff;
      font-size: 14px;
      font-weight: 200;
   &--active{
-     background-color: darken(#f05724, 10%);
+     background-color: darken(#194bfa, 10%);
      font-weight: bold;
    }
   &--left{

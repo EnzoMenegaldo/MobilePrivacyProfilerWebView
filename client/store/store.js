@@ -1,18 +1,18 @@
 
 export const state = {
   debug: true,
-  userToPresent: 'null',
+  activeUser: 'Aucun',
   activeTab: 'HelloWorld'
 }
 
 export const mutations = {
-  setUserToPresentAction ( state, newValue ) {
-    if (this.debug) { console.log('setUserToPresentAction triggered with', newValue) }
-    state.userToPresent = newValue
+  setActiveUser ( state, newValue ) {
+    if (this.debug) { console.log('setActiveUserAction triggered with', newValue) }
+    state.activeUser = newValue
   },
-  clearUserToPresentAction ( state ) {
-    if (this.debug) { console.log('clearUserToPresentAction triggered') }
-    state.userToPresent = 'null'
+  clearActiveUser ( state ) {
+    if (this.debug) { console.log('clearActiveUserAction triggered') }
+    state.activeUser = 'Aucun'
   },
   setActiveTab (state, newValue) {
     if (this.debug) { console.log('setActiveTab triggered with', newValue) }
@@ -21,8 +21,8 @@ export const mutations = {
 }
 
 export const getters = {
-  getUserToPresent ( state ) {
-    return state.userToPresent
+  getActiveUser ( state ) {
+    return state.activeUser
   },
   getActiveTab ( state ) {
     return state.activeTab
