@@ -3,16 +3,16 @@
     <div class="header__sticky">
       <div class="header__content">
         <router-link to="/" >
-<container>
-  <b-row  align-v="center">
-    <b-col>
-      <img src=".././assets/droid-icon.png" height="60px" @click="changeActiveTab()">
-    </b-col>
-    <b-col>
-      <txt class="txt" @click="changeActiveTab()"> Mobile Privacy</txt>
-    </b-col>
-  </b-row>
-</container>
+          <container>
+            <b-row  align-v="center">
+              <b-col>
+                <img src=".././assets/droid-icon.png" height="45px" @click="changeActiveTab()">
+              </b-col>
+              <b-col>
+                <txt class="txt" @click="changeActiveTab()"> Mobile Privacy</txt>
+              </b-col>
+            </b-row>
+          </container>
         </router-link>
       </div>
     </div>
@@ -28,7 +28,7 @@ export default {
   },
   modules: [
     'bootstrap-vue/nuxt', { css: false }
-    ],
+  ],
   computed: {
   },
   methods: {
