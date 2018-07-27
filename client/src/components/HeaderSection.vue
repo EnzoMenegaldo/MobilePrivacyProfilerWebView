@@ -2,8 +2,17 @@
   <header class="header">
     <div class="header__sticky">
       <div class="header__content">
-        <router-link to="/">
-          <img src=".././assets/logo.png">
+        <router-link to="/" >
+<container>
+  <b-row  align-v="center">
+    <b-col>
+      <img src=".././assets/droid-icon.png" height="60px" @click="changeActiveTab()">
+    </b-col>
+    <b-col>
+      <txt class="txt" @click="changeActiveTab()"> Mobile Privacy</txt>
+    </b-col>
+  </b-row>
+</container>
         </router-link>
       </div>
     </div>
@@ -17,14 +26,30 @@ export default {
     return {
     }
   },
+  modules: [
+    'bootstrap-vue/nuxt', { css: false }
+    ],
   computed: {
   },
   methods: {
+    changeActiveTab: function () {
+      this.$store.commit('setActiveTab', 'HelloWorld')
+    }
   }
 }
 </script>
-
+<style type="text/css">
+a:link
+{
+text-decoration:none;
+}
+</style>
 <style lang="scss" scoped>
+  .txt {
+    color: #fff;
+    font-weight: bold;
+    font-size: 30px;
+  }
   .pointer {
     cursor: pointer;
   }

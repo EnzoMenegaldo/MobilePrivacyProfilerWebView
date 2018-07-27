@@ -2,7 +2,7 @@
 export const state = {
   debug: true,
   userToPresent: 'null',
-  activeTab: 'SelectUser'
+  activeTab: 'HelloWorld'
 }
 
 export const mutations = {

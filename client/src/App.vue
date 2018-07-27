@@ -1,6 +1,8 @@
 <template>
-  <div id="app">
+  <div class="VueApp grid__row" id="app">
     <header-section/>
+
+    <tab-section v-bind:activeTab = "activeTab" />
 
     <div class="main">
       <transition name="fade" mode="out-in">
@@ -14,11 +16,22 @@
 
 <script>
 import HeaderSection from '@/components/HeaderSection.vue'
+import TabSection from '@/components/TabSection.vue'
+import store from '../store'
 
 export default {
   name: 'App',
+  store,
   components: {
-    HeaderSection
+    HeaderSection,
+    TabSection
+  },
+  computed: {
+    activeTab () {
+      return store.state.activeTab
+    }
+  },
+  created () {
   }
 }
 </script>
