@@ -3,8 +3,8 @@
     <b-row>
       <b-col><div class="spacer"></div></b-col>
     </b-row>
-    <b-row align-h="start" >
-      <b-col offset="4" cols="auto" class="txt-left"><div >Utilisateur actif :</div></b-col>
+    <b-row align-h="center" >
+      <b-col cols="auto" class="txt-left"><div >Utilisateur actif :</div></b-col>
       <b-col sticky cols="auto" class="txt-right"><div >{{activeUser}}</div></b-col>
     </b-row>
     <b-row>
@@ -14,13 +14,13 @@
       <b-col>
         <div id="userList">
           <b-button-group vertical>
-            <b-button @click="clearActiveUser()">Réinitialiser</b-button>
-            <b-button v-for="user in users" :key="user._id"
+            <b-button variant="primary" class="test" @click="clearActiveUser()">Réinitialiser</b-button>
+            <b-button variant="primary" v-for="user in users" :key="user._id"
                       @click="changeActiveUser(user.userId)"
             >
               {{user.userId}}
             </b-button>
-            <b-button @click="clearActiveUser()">Réinitialiser</b-button>
+            <b-button variant="primary" @click="clearActiveUser()">Réinitialiser</b-button>
           </b-button-group>
         </div>
       </b-col>
