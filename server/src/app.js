@@ -29,6 +29,24 @@ app.post('/Users', (req, res) => {
     })
 })
 
+app.post('/Devices', (req, res) => {
+    db = startConnection (dbAdress)
+    console.log('Bluetooth devices requested. UserId : '+req.body.UserId)
+    var userId = ''+req.body.UserId
+    db.all(
+        'SELECT _id, name, type, mac FROM bluetoothDevice WHERE userId= ?',
+        [userId],
+        function(error, rows) {
+            res.send(rows)
+        }
+    )
+    db.close((err) => {
+        if(err==null) {console.log('Connection closed')}
+        else {console.error(err.message)
+        }
+    })
+})
+
 
 app.listen(process.env.PORT || 8081)
 

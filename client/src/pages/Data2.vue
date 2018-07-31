@@ -19,14 +19,14 @@
 </template>
 
 <script>
-  export default {
-    name: 'Data2',
-    computed: {
-      activeUser () {
-        return this.$store.state.activeUser
-      }
+export default {
+  name: 'Data2',
+  computed: {
+    activeUser () {
+      return this.$store.state.activeUser
     }
   }
+}
 </script>
 
 <style scoped>
@@ -44,9 +44,9 @@
     color: #194bfa;
   }
   .span{
-    border-width: 2px;
+    border-width: 1.5px;
     border-style: solid;
-    border-color: #000000;
+    border-color: #5a6268;
     padding: 15px;
     margin: 10px;
   }

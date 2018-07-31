@@ -4,7 +4,7 @@ import HelloWorld from '@/pages/HelloWorld'
 import SelectUser from '@/pages/SelectUser'
 import Data1 from '@/pages/Data1'
 import Data2 from '@/pages/Data2'
-import TabSection from '@/components/TabSection'
+import BluetoothCharts from '@/pages/BluetoothCharts'
 
 Vue.use(Router)
 
@@ -31,9 +31,9 @@ export default new Router({
       component: Data2
     },
     {
-      path: '/test',
-      name: 'TabSection',
-      component: TabSection
+      path: '/bluetooth',
+      name: 'BluetoothCharts',
+      component: BluetoothCharts
     }
   ]
 })

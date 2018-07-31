@@ -31,6 +31,7 @@
 
 <script>
 import UsersService from '@/services/UsersService'
+import BluetoothCharts from '@/pages/BluetoothCharts'
 
 export default {
   name: 'SelectUser',
@@ -57,6 +58,7 @@ export default {
     },
     changeActiveUser: function (userId) {
       this.$store.commit('setActiveUser', userId)
+      BluetoothCharts.$forceUpdate()
     },
     clearActiveUser: function (userId) {
       this.$store.commit('clearActiveUser')

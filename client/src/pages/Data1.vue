@@ -8,7 +8,7 @@
     <b-col class="title"><div>Page 1</div></b-col>
   </b-row>
   <b-row align-h="center" >
-    <b-col class="span" cols="5"><img src=".././assets/logo.png" height="150px"></b-col>
+    <b-col class="span" cols="5"><router-link to="/bluetooth"><img src=".././assets/logo-bluetooth.png" height="150px"/></router-link></b-col>
     <b-col class="span" cols="5"><img src=".././assets/logo.png" height="150px"></b-col>
   </b-row>
   <b-row align-h="center" >
@@ -19,8 +19,10 @@
 </template>
 
 <script>
+import BluetoothCharts from './BluetoothCharts'
 export default {
   name: 'Data1',
+  components: {BluetoothCharts},
   computed: {
     activeUser () {
       return this.$store.state.activeUser
@@ -44,9 +46,9 @@ export default {
   color: #194bfa;
 }
 .span{
-  border-width: 2px;
+  border-width: 1.5px;
   border-style: solid;
-  border-color: #000000;
+  border-color: #5a6268;
   padding: 15px;
   margin: 10px;
 }
