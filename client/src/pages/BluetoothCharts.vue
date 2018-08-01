@@ -1,6 +1,11 @@
 <template>
-  <container :key=reloadKey>
-    <b-row class="firstRow" align-h="center">
+  <container>
+      <b-row class="firstRow" align-h="center">
+        <b-clo>
+          <router-link to="/Data1"><div class="retourbtn">Retour</div></router-link>
+        </b-clo>
+      </b-row>
+    <b-row align-h="center">
       <b-clo>
         <div class="title">Liste des périphériques bluetooth</div>
       </b-clo>
@@ -63,8 +68,41 @@ export default {
     this.getBluetoothDevices(this.$store.state.activeUser)
   },
   computed: {
-    reloadKey () {
+    activeUser: function () {
       return this.$store.state.activeUser
+    }
+  },
+  watch: {
+    activeUser: async function () {
+      const response = await UsersService.fetchBluetoothDevices({ UserId: this.$store.state.activeUser })
+      var responseData = response.data
+      var dataToDisplay = []
+      responseData.forEach(
+        function (obj) {
+          var typeObject = Diver.fromIntTypeToTypeDetail(obj.type)
+          dataToDisplay.push(
+            {
+              '_id': obj._id,
+              'icon': typeObject.icon,
+              'type': typeObject.typeName,
+              'name': obj.name,
+              'mac': obj.mac
+            }
+          )
+        }
+      )
+      if (dataToDisplay.length === 0) {
+        dataToDisplay.push(
+          {
+            '_id': 0,
+            'icon': 'fa fa-question-circle fa-4x',
+            'type': 'Pas de périphérique enregistré',
+            'name': ' ',
+            'mac': ' '
+          }
+        )
+      }
+      this.devices = dataToDisplay
     }
   },
   methods: {
@@ -86,6 +124,17 @@ export default {
           )
         }
       )
+      if (dataToDisplay.length === 0) {
+        dataToDisplay.push(
+          {
+            '_id': 0,
+            'icon': 'fa fa-question-circle fa-4x',
+            'type': 'Pas de périphérique enregistré',
+            'name': ' ',
+            'mac': ' '
+          }
+        )
+      }
       this.devices = dataToDisplay
     }
   }
@@ -94,13 +143,28 @@ export default {
 
 <style scoped>
 .firstRow{
-  margin: 20px;
+  margin-top: 20px;
+}
+.retourbtn{
+  position: center;
+  display: block;
+  color: #000;
+  text-transform: uppercase;
+  text-decoration: none;
+  padding: 10px;
+  background-color: #194bfa;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 900;
+  border-radius: .5em;
+  margin-right: 0;
 }
 .title
 {
   height: 40px;
   padding: 15px;
   margin: 10px;
+  margin-bottom: 20px;
 
   font-size: 18px;
   font-weight: 900;
