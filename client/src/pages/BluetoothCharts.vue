@@ -2,7 +2,7 @@
   <container>
       <b-row class="firstRow" align-h="center">
         <b-clo>
-          <router-link to="/Data1"><div class="retourbtn">Retour</div></router-link>
+          <router-link to="/Data1"><div class="returnBtn">Retour</div></router-link>
         </b-clo>
       </b-row>
     <b-row align-h="center">
@@ -26,7 +26,7 @@
                       <b-col cols="10"><div class="txtType">{{device.type}}</div></b-col>
                     </b-row>
                     <b-row align-v="center" align-h="start">
-                      <b-col cols="10"><div class="txtName">{{device.name}}</div></b-col>
+                      <b-col cols="10"><div class="txtDate">{{device.name}}</div></b-col>
                     </b-row>
                     <b-row align-v="center" align-h="start">
                       <b-col cols="10"><div class="txtMac">{{device.mac}}</div></b-col>
@@ -54,12 +54,12 @@ export default {
     return {
       devices: [
         { '_id': 0, 'icon': 'fa fa-question-circle fa-4x', 'type': 'No connection to server', 'name': 'Unknown', 'mac': 'FF:FF:FF:FF:FF:FF' },
-        { '_id': 1, 'icon': 'fa fa-question-circle fa-4x', 'type': 'Unknown', 'name': 'Unknown', 'mac': 'FF:FF:FF:FF:FF:FF' },
-        { '_id': 2, 'icon': 'fa fa-question-circle fa-4x', 'type': 'Unknown', 'name': 'Unknown', 'mac': 'FF:FF:FF:FF:FF:FF' },
-        { '_id': 3, 'icon': 'fa fa-question-circle fa-4x', 'type': 'Unknown', 'name': 'Unknown', 'mac': 'FF:FF:FF:FF:FF:FF' },
-        { '_id': 4, 'icon': 'fa fa-question-circle fa-4x', 'type': 'Unknown', 'name': 'Unknown', 'mac': 'FF:FF:FF:FF:FF:FF' },
-        { '_id': 5, 'icon': 'fa fa-question-circle fa-4x', 'type': 'Unknown', 'name': 'Unknown', 'mac': 'FF:FF:FF:FF:FF:FF' },
-        { '_id': 6, 'icon': 'fa fa-question-circle fa-4x', 'type': 'Unknown', 'name': 'Unknown', 'mac': 'FF:FF:FF:FF:FF:FF' },
+        { '_id': 1, 'icon': 'fa fa-play-circle fa-4x', 'type': 'Unknown', 'name': 'Unknown', 'mac': 'FF:FF:FF:FF:FF:FF' },
+        { '_id': 2, 'icon': 'fa fa-laptop fa-4x', 'type': 'Unknown', 'name': 'Unknown', 'mac': 'FF:FF:FF:FF:FF:FF' },
+        { '_id': 3, 'icon': 'fa fa-heartbeat fa-4x', 'type': 'Unknown', 'name': 'Unknown', 'mac': 'FF:FF:FF:FF:FF:FF' },
+        { '_id': 4, 'icon': 'fa fa-mobile fa-4x', 'type': 'Unknown', 'name': 'Unknown', 'mac': 'FF:FF:FF:FF:FF:FF' },
+        { '_id': 5, 'icon': 'fa fa-futbol-o fa-4x', 'type': 'Unknown', 'name': 'Unknown', 'mac': 'FF:FF:FF:FF:FF:FF' },
+        { '_id': 6, 'icon': 'fa fa-male fa-4x', 'type': 'Unknown', 'name': 'Unknown', 'mac': 'FF:FF:FF:FF:FF:FF' },
         { '_id': 7, 'icon': 'fa fa-question-circle fa-4x', 'type': 'Unknown', 'name': 'Unknown', 'mac': 'FF:FF:FF:FF:FF:FF' }
       ]
     }
@@ -145,7 +145,7 @@ export default {
 .firstRow{
   margin-top: 20px;
 }
-.retourbtn{
+.returnBtn{
   position: center;
   display: block;
   color: #000;
@@ -188,7 +188,7 @@ export default {
   font-size: 16px;
   color: #000000;
 }
-.txtName{
+.txtDate{
   font-size: 14px;
 }
 .txtMac{

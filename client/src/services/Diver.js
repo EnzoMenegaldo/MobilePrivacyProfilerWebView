@@ -71,28 +71,28 @@ export default {
         return {'icon': 'fa fa-laptop fa-4x', 'typeName': 'Uncategorized Computer'}
 
       case 2308:
-        return {'icon': 'fa fa-hearthbeat fa-4x', 'typeName': 'Blood Pressure'}
+        return {'icon': 'fa fa-heartbeat fa-4x', 'typeName': 'Blood Pressure'}
 
       case 2332:
-        return {'icon': 'fa fa-hearthbeat fa-4x', 'typeName': 'Data Display'}
+        return {'icon': 'fa fa-heartbeat fa-4x', 'typeName': 'Data Display'}
 
       case 2320:
-        return {'icon': 'fa fa-hearthbeat fa-4x', 'typeName': 'Glucose'}
+        return {'icon': 'fa fa-heartbeat fa-4x', 'typeName': 'Glucose'}
 
       case 2324:
-        return {'icon': 'fa fa-hearthbeat fa-4x', 'typeName': 'Oxymeter'}
+        return {'icon': 'fa fa-heartbeat fa-4x', 'typeName': 'Oxymeter'}
 
       case 2328:
-        return {'icon': 'fa fa-hearthbeat fa-4x', 'typeName': 'Pulse Rate'}
+        return {'icon': 'fa fa-heartbeat fa-4x', 'typeName': 'Pulse Rate'}
 
       case 2312:
-        return {'icon': 'fa fa-hearthbeat fa-4x', 'typeName': 'Thermometer'}
+        return {'icon': 'fa fa-heartbeat fa-4x', 'typeName': 'Thermometer'}
 
       case 2304:
-        return {'icon': 'fa fa-hearthbeat fa-4x', 'typeName': 'Uncategorized Health Display'}
+        return {'icon': 'fa fa-heartbeat fa-4x', 'typeName': 'Uncategorized Health Display'}
 
       case 2316:
-        return {'icon': 'fa fa-hearthbeat fa-4x', 'typeName': 'Weighing'}
+        return {'icon': 'fa fa-heartbeat fa-4x', 'typeName': 'Weighing'}
 
       case 516:
         return {'icon': 'fa fa-mobile fa-4x', 'typeName': 'Cellular'}

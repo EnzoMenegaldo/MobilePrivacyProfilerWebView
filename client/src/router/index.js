@@ -5,6 +5,7 @@ import SelectUser from '@/pages/SelectUser'
 import Data1 from '@/pages/Data1'
 import Data2 from '@/pages/Data2'
 import BluetoothCharts from '@/pages/BluetoothCharts'
+import BatteryCharts from '@/pages/BatteryCharts'
 
 Vue.use(Router)
 
@@ -34,6 +35,11 @@ export default new Router({
       path: '/bluetooth',
       name: 'BluetoothCharts',
       component: BluetoothCharts
+    },
+    {
+      path: '/battery',
+      name: 'BatteryCharts',
+      component: BatteryCharts
     }
   ]
 })

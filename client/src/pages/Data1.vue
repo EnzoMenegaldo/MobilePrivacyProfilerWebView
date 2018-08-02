@@ -9,11 +9,11 @@
   </b-row>
   <b-row align-h="center" >
     <b-col class="span" cols="5"><router-link to="/bluetooth"><img src=".././assets/logo-bluetooth.png" height="150px"/></router-link></b-col>
-    <b-col class="span" cols="5"><img src=".././assets/logo.png" height="150px"></b-col>
+    <b-col class="span" cols="5"><router-link to="/battery"><img src=".././assets/logo-battery.png" height="150px"></router-link></b-col>
   </b-row>
   <b-row align-h="center" >
-    <b-col class="span" cols="5"><img src=".././assets/logo.png" height="150px"></b-col>
-    <b-col class="span" cols="5"><img src=".././assets/logo.png" height="150px"></b-col>
+    <b-col class="span" cols="5"><img src=".././assets/logo-sms.png" height="150px"></b-col>
+    <b-col class="span" cols="5"><img src="../assets/logo-phone.png" height="150px"></b-col>
   </b-row>
 </container>
 </template>
