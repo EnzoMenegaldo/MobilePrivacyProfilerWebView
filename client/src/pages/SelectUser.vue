@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import UsersService from '@/services/UsersService'
+import FetchService from '@/services/FetchService'
 import BluetoothCharts from '@/pages/BluetoothCharts'
 
 export default {
@@ -53,7 +53,7 @@ export default {
   },
   methods: {
     async getUsers () {
-      const response = await UsersService.fetchUsers()
+      const response = await FetchService.fetchUsers()
       this.users = response.data
     },
     changeActiveUser: function (userId) {

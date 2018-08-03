@@ -17,10 +17,11 @@
     "axios": "^0.18.0",
     "bootstrap": "^4.1.3",
     "bootstrap-vue": "^2.0.0-rc.11",
-    "morris": "^0.1.4",
+    "jquery": "^1.9.1",
     "node-sass": "^4.9.2",
     "vue": "^2.5.2",
     "vue-lazyload": "^1.2.6",
+    "vue-morris": "0.0.13",
     "vue-router": "^3.0.1",
     "vuex": "^3.0.1"
   },

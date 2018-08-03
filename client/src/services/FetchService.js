@@ -6,5 +6,8 @@ export default {
   },
   fetchBluetoothDevices (params) {
     return Api().post('Devices', params)
+  },
+  fetchBatteryStates (params) {
+    return Api().post('Battery', params)
   }
 }

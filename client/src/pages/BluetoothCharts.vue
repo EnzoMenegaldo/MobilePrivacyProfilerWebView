@@ -45,7 +45,7 @@
 </template>
 
 <script>
-import UsersService from '@/services/UsersService'
+import FetchService from '@/services/FetchService'
 import Diver from '@/services/Diver'
 
 export default {
@@ -74,7 +74,7 @@ export default {
   },
   watch: {
     activeUser: async function () {
-      const response = await UsersService.fetchBluetoothDevices({ UserId: this.$store.state.activeUser })
+      const response = await FetchService.fetchBluetoothDevices({ UserId: this.$store.state.activeUser })
       var responseData = response.data
       var dataToDisplay = []
       responseData.forEach(
@@ -107,7 +107,7 @@ export default {
   },
   methods: {
     async getBluetoothDevices () {
-      const response = await UsersService.fetchBluetoothDevices({ UserId: this.$store.state.activeUser })
+      const response = await FetchService.fetchBluetoothDevices({ UserId: this.$store.state.activeUser })
       var responseData = response.data
       var dataToDisplay = []
       responseData.forEach(

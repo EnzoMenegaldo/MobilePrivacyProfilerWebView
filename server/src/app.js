@@ -47,6 +47,23 @@ app.post('/Devices', (req, res) => {
     })
 })
 
+app.post('/Battery', (req, res) => {
+    db = startConnection (dbAdress)
+    console.log('Battery stats requested. UserId : '+req.body.UserId)
+    var userId = ''+req.body.UserId
+    db.all(
+        'SELECT _id, level, isPugged, plugType, date FROM batteryUsage WHERE userId= ?',
+        [userId],
+        function(error, rows) {
+            res.send(rows)
+        }
+    )
+    db.close((err) => {
+        if(err==null) {console.log('Connection closed')}
+        else {console.error(err.message)
+        }
+    })
+})
 
 app.listen(process.env.PORT || 8081)
 
