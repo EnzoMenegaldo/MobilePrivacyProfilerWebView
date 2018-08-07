@@ -1,5 +1,5 @@
 <template>
-  <container>
+  <container v-on:mouseover="resize()">
     <b-row class="firstRow" align-h="center">
       <b-clo>
         <router-link to="/Data1"><div class="returnBtn">Retour</div></router-link>
@@ -8,23 +8,27 @@
     <b-row align-h="center">
       <b-clo>
         <div class="title">Suivit de la batterie</div>
+        <div>traqueur : {{traqueur}}</div>
       </b-clo>
     </b-row>
+    <b-row align-h="center">
+      <b-col cols="auto"><div>Début courbe :</div><date-picker v-model="value1" lang="fr" :not-before="new Date()" confirm></date-picker></b-col>
+      <b-col cols="auto"><div>Fin courbe :</div><date-picker v-model="value1" lang="fr" :not-before="new Date()" confirm></date-picker></b-col>
+    </b-row>
     <b-row class="row chart" align-h="center" align-v="center">
-      <b-col cols="10">
-        <donut-chart id="donut"
-                                    :data="donutData"
-                                    :colors="arrayColors"
-                                    resize="true">
-        </donut-chart>
-        <line-chart id="line"
-
-                    :data="lineData"
-                    xkey="year"
-                    ykeys='[ "a", "b" ]'
-                    line-colors='[ "#FF6384", "#73c000" ]'
-                    grid=" true"
+      <b-col  cols="10">
+        <line-chart id="batteryChartId"
+                    :data="batteryChartData"
+                    xkey="date"
+                    ykeys='[ "lvl" ]'
+                    :ymin= "auto"
+                    :ymax= "auto"
+                    :dateFormat="dateFormatter"
+                    line-colors='[ "#194bfa" ]'
+                    grid="true"
                     grid-text-weight="bold"
+                    pointSize="2px"
+                    hideHover="true"
                     resize="true">
         </line-chart>
       </b-col>
@@ -62,11 +66,12 @@
 
 <script>
 import Diver from '@/services/Diver'
+import DatePicker from 'vue2-datepicker'
 import FetchService from '@/services/FetchService'
 import Raphael from 'raphael/raphael'
 global.Raphael = Raphael
 // eslint-disable-next-line
-import { DonutChart, BarChart, LineChart, AreaChart } from 'vue-morris'
+import { LineChart } from 'vue-morris'
 
 export default {
   name: 'BatteryCharts',
@@ -82,29 +87,28 @@ export default {
         { '_id': 6, 'icon': 'fa fa-question-circle fa-4x', 'type': 'Unknown', 'start': 'date', 'end': 'date' },
         { '_id': 7, 'icon': 'fa fa-question-circle fa-4x', 'type': 'Unknown', 'start': 'date', 'end': 'date' }
       ],
-      donutData: [
-        { label: 'Echec', value: 40 },
-        { label: 'Réussite', value: 150 },
-        { label: 'Essai encore', value: 100 }
+      batteryChartData: [
+        {date: 1530800000000, lvl: 5},
+        {date: 1530900000000, lvl: 55},
+        {date: 1531000000000, lvl: 20},
+        {date: 1531100000000, lvl: 75}
       ],
-      arrayColors: [ '#FF6384', '#73c000', '#FFCE56' ],
-      lineData: [
-        {year: "2013", a: 10, b: 5},
-        {year: "2014", a: 40, b: 15},
-        {year: "2015", a: 20, b: 25},
-        {year: "2013", a: 30, b: 20}
-      ]
+      ymin: 0,
+      ymax: 100,
+      value1: 14,
+      traqueur: 0
     }
   },
   mounted () {
-    this.getBatteryStats(this.$store.state.activeUser)
+    this.getBatteryStats(this.$store.state.activeUser),
+    this.value1= new Date()
   },
   computed: {
     activeUser: function () {
       return this.$store.state.activeUser
     }
   },
-  components: { DonutChart, BarChart, LineChart, AreaChart }, // DonutChart
+  components: { LineChart, DatePicker },
   watch: {
     activeUser: async function () {
       const response = await FetchService.fetchBatteryStates({ UserId: this.$store.state.activeUser })
@@ -125,7 +129,7 @@ export default {
             previousState = true
             _id = obj._id
             var startDateToTransform = new Date(obj.date)
-            startDate = Diver.dateFormater('#hhh# h #mm# le #DD#/#MM#', startDateToTransform)
+            startDate = Diver.dateFormater('#hhh# h #mm# le #DDD# #DD# #MMMM#', startDateToTransform)
             switch (obj.plugType) { // wasn't plugged but is now
               case 'BATTERY_PLUGGED_USB' :
                 plugType = 'USB'
@@ -151,7 +155,7 @@ export default {
           } else { // was plugged and is not anymore
             previousState = false
             var endDateToTransform = new Date(obj.date)
-            endDate = Diver.dateFormater('#hhh# h #mm# le #DD#/#MM#', endDateToTransform)
+            endDate = Diver.dateFormater('#hhh# h #mm# le #DDD# #DD# #MMMM#', endDateToTransform)
             dataToDisplay.push(
               {
                 '_id': _id,
@@ -178,6 +182,16 @@ export default {
         )
       }
       this.chargeEvents = dataToDisplay
+      // end of processing for charge event display
+      // now processing to display lineChart:
+      var chartDataToDisplay = []
+      for (i = 0; i < responseData.length; i++) {
+        obj = responseData[i]
+
+        chartDataToDisplay.push({date: obj.date, lvl: obj.level})
+      }
+      this.batteryChartData = chartDataToDisplay
+      window.dispatchEvent(new Event('resize'))
     }
   },
   methods: {
@@ -200,7 +214,7 @@ export default {
             previousState = true
             _id = obj._id
             var startDateToTransform = new Date(obj.date)
-            startDate = Diver.dateFormater('#hhh# h #mm# le #DD#/#MM#', startDateToTransform)
+            startDate = Diver.dateFormater('#hhh# h #mm# le #DDD# #DD# #MMMM#', startDateToTransform)
             switch (obj.plugType) { // wasn't plugged but is now
               case 'BATTERY_PLUGGED_USB' :
                 plugType = 'USB'
@@ -226,7 +240,7 @@ export default {
           } else { // was plugged and is not anymore
             previousState = false
             var endDateToTransform = new Date(obj.date)
-            endDate = Diver.dateFormater('#hhh# h #mm# le #DD#/#MM#', endDateToTransform)
+            endDate = Diver.dateFormater('#hhh# h #mm# le #DDD# #DD# #MMMM#', endDateToTransform)
             dataToDisplay.push(
               {
                 '_id': _id,
@@ -253,6 +267,27 @@ export default {
         )
       }
       this.chargeEvents = dataToDisplay
+      // end of processing for charge event display
+      // now processing to display lineChart:
+      var chartDataToDisplay = []
+
+      for (i = 0; i < responseData.length; i++) {
+        obj = responseData[i]
+        chartDataToDisplay.push({date: obj.date, lvl: obj.level})
+      }
+      this.batteryChartData = chartDataToDisplay
+    },
+    resize () {
+      window.dispatchEvent(new Event('resize'))
+    },
+    dateFormatter (millisecondDate) {
+      /* var date, heure, min, day, month
+      date = new Date(millisecondDate)
+      heure = date.getHours()
+      this.traqueur = date.getHours()
+      return millisecondDate+'' */
+      // var longDate = new Date(millisecondDate).getTime()
+      return Diver.dateFormater('#hhh# h #mm# le #DDD# #DD# #MMMM#', millisecondDate)
     }
   }
 }

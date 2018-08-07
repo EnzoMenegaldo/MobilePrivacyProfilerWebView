@@ -184,7 +184,7 @@ export default {
    */
   dateFormater (formatString, date) {
     var YYYY, YY, MMMM, MMM, MM, M, DDDD, DDD, DD, D, hhhh, hhh, hh, h, mm, m, ss, s, ampm, AMPM, dMod, th
-    var dateObject = date
+    var dateObject = new Date(date)
     YY = ((YYYY = dateObject.getFullYear()) + '').slice(-2)
     MM = (M = dateObject.getMonth() + 1) < 10 ? ('0' + M) : M
     MMM = (MMMM = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Decembre'][M - 1]).substring(0, 3)
