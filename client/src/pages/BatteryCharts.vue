@@ -17,6 +17,16 @@
                                     :colors="arrayColors"
                                     resize="true">
         </donut-chart>
+        <line-chart id="line"
+
+                    :data="lineData"
+                    xkey="year"
+                    ykeys='[ "a", "b" ]'
+                    line-colors='[ "#FF6384", "#73c000" ]'
+                    grid=" true"
+                    grid-text-weight="bold"
+                    resize="true">
+        </line-chart>
       </b-col>
     </b-row>
 
@@ -78,6 +88,12 @@ export default {
         { label: 'Essai encore', value: 100 }
       ],
       arrayColors: [ '#FF6384', '#73c000', '#FFCE56' ],
+      lineData: [
+        {year: "2013", a: 10, b: 5},
+        {year: "2014", a: 40, b: 15},
+        {year: "2015", a: 20, b: 25},
+        {year: "2013", a: 30, b: 20}
+      ]
     }
   },
   mounted () {
@@ -94,7 +110,6 @@ export default {
       const response = await FetchService.fetchBatteryStates({ UserId: this.$store.state.activeUser })
       var responseData = response.data
       var dataToDisplay = []
-      this.traqueurResponseLength = responseData.length
       // construction of the charge event list
       var previousState = false
       var _id
@@ -105,12 +120,12 @@ export default {
       for (var i = 0; i < responseData.length; i++) {
         var obj = responseData[i]
         // were previous entry plugged?
-        if (!previousState) {// if not then is it plugged now? (if (no) ? do nothing : set an entry start
+        if (!previousState) { // if not then is it plugged now? (if (no) ? do nothing : set an entry start
           if (obj.isPugged === 1) {
             previousState = true
             _id = obj._id
             var startDateToTransform = new Date(obj.date)
-            startDate = Diver.dateFormater('#hhh# h #mm# le #DD#/#MM#',startDateToTransform)
+            startDate = Diver.dateFormater('#hhh# h #mm# le #DD#/#MM#', startDateToTransform)
             switch (obj.plugType) { // wasn't plugged but is now
               case 'BATTERY_PLUGGED_USB' :
                 plugType = 'USB'
@@ -136,7 +151,7 @@ export default {
           } else { // was plugged and is not anymore
             previousState = false
             var endDateToTransform = new Date(obj.date)
-            endDate = Diver.dateFormater('#hhh# h #mm# le #DD#/#MM#',endDateToTransform)
+            endDate = Diver.dateFormater('#hhh# h #mm# le #DD#/#MM#', endDateToTransform)
             dataToDisplay.push(
               {
                 '_id': _id,
@@ -170,7 +185,6 @@ export default {
       const response = await FetchService.fetchBatteryStates({ UserId: this.$store.state.activeUser })
       var responseData = response.data
       var dataToDisplay = []
-      this.traqueurResponseLength = responseData.length
       // construction of the charge event list
       var previousState = false
       var _id
@@ -181,12 +195,12 @@ export default {
       for (var i = 0; i < responseData.length; i++) {
         var obj = responseData[i]
         // were previous entry plugged?
-        if (!previousState) {// if not then is it plugged now? (if (no) ? do nothing : set an entry start
+        if (!previousState) { // if not then is it plugged now? (if (no) ? do nothing : set an entry start
           if (obj.isPugged === 1) {
             previousState = true
             _id = obj._id
             var startDateToTransform = new Date(obj.date)
-            startDate = Diver.dateFormater('#hhh# h #mm# le #DD#/#MM#',startDateToTransform)
+            startDate = Diver.dateFormater('#hhh# h #mm# le #DD#/#MM#', startDateToTransform)
             switch (obj.plugType) { // wasn't plugged but is now
               case 'BATTERY_PLUGGED_USB' :
                 plugType = 'USB'
@@ -212,7 +226,7 @@ export default {
           } else { // was plugged and is not anymore
             previousState = false
             var endDateToTransform = new Date(obj.date)
-            endDate = Diver.dateFormater('#hhh# h #mm# le #DD#/#MM#',endDateToTransform)
+            endDate = Diver.dateFormater('#hhh# h #mm# le #DD#/#MM#', endDateToTransform)
             dataToDisplay.push(
               {
                 '_id': _id,
