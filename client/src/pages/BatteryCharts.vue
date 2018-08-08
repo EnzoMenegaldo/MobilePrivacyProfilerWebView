@@ -8,17 +8,16 @@
     <b-row align-h="center">
       <b-clo>
         <div class="title">Suivit de la batterie</div>
-        <div>traqueur : {{traqueur}}</div>
       </b-clo>
     </b-row>
     <b-row align-h="center">
-      <b-col cols="auto"><div>Début courbe :</div><date-picker v-model="value1" lang="fr" :not-before="new Date()" confirm></date-picker></b-col>
-      <b-col cols="auto"><div>Fin courbe :</div><date-picker v-model="value1" lang="fr" :not-before="new Date()" confirm></date-picker></b-col>
+      <b-col cols="auto"><div>Début :</div><date-picker v-model="cursorStart" lang="fr" :not-before="firstDate" :not-after="cursorEnd" confirm></date-picker></b-col>
+      <b-col cols="auto"><div>Fin :</div><date-picker v-model="cursorEnd" lang="fr" :not-before="cursorStart" :not-after="lastDate" confirm></date-picker></b-col>
     </b-row>
     <b-row class="row chart" align-h="center" align-v="center">
       <b-col  cols="10">
         <line-chart id="batteryChartId"
-                    :data="batteryChartData"
+                    :data="batteryChartDisplayedData"
                     xkey="date"
                     ykeys='[ "lvl" ]'
                     :ymin= "auto"
@@ -39,6 +38,7 @@
         <img src=".././assets/logo-battery.png" height="200px"/>
       </b-col>
       <b-col cols="6">
+        <div>Liste des évènements de charge :</div>
         <b-list-group class="list-group">
           <b-list-group-item class="group-item" v-for="chargeEvent in chargeEvents" :key="chargeEvent._id">
             <container>
@@ -87,6 +87,12 @@ export default {
         { '_id': 6, 'icon': 'fa fa-question-circle fa-4x', 'type': 'Unknown', 'start': 'date', 'end': 'date' },
         { '_id': 7, 'icon': 'fa fa-question-circle fa-4x', 'type': 'Unknown', 'start': 'date', 'end': 'date' }
       ],
+      batteryChartDisplayedData: [
+        {date: 1530800000000, lvl: 5},
+        {date: 1530900000000, lvl: 55},
+        {date: 1531000000000, lvl: 20},
+        {date: 1531100000000, lvl: 75}
+      ],
       batteryChartData: [
         {date: 1530800000000, lvl: 5},
         {date: 1530900000000, lvl: 55},
@@ -95,13 +101,14 @@ export default {
       ],
       ymin: 0,
       ymax: 100,
-      value1: 14,
-      traqueur: 0
+      firstDate: 14,
+      cursorStart: 14,
+      cursorEnd: 14,
+      lastDate: 14
     }
   },
   mounted () {
-    this.getBatteryStats(this.$store.state.activeUser),
-    this.value1= new Date()
+    this.getBatteryStats(this.$store.state.activeUser)
   },
   computed: {
     activeUser: function () {
@@ -129,7 +136,7 @@ export default {
             previousState = true
             _id = obj._id
             var startDateToTransform = new Date(obj.date)
-            startDate = Diver.dateFormater('#hhh# h #mm# le #DDD# #DD# #MMMM#', startDateToTransform)
+            startDate = Diver.dateFormatter('#hhh# h #mm# le #DDD# #DD# #MMMM#', startDateToTransform)
             switch (obj.plugType) { // wasn't plugged but is now
               case 'BATTERY_PLUGGED_USB' :
                 plugType = 'USB'
@@ -155,7 +162,7 @@ export default {
           } else { // was plugged and is not anymore
             previousState = false
             var endDateToTransform = new Date(obj.date)
-            endDate = Diver.dateFormater('#hhh# h #mm# le #DDD# #DD# #MMMM#', endDateToTransform)
+            endDate = Diver.dateFormatter('#hhh# h #mm# le #DDD# #DD# #MMMM#', endDateToTransform)
             dataToDisplay.push(
               {
                 '_id': _id,
@@ -191,7 +198,34 @@ export default {
         chartDataToDisplay.push({date: obj.date, lvl: obj.level})
       }
       this.batteryChartData = chartDataToDisplay
-      window.dispatchEvent(new Event('resize'))
+      this.batteryChartDisplayedData = this.batteryChartData
+      // setup first,last date and cursors's date
+      if (responseData.length > 1) {
+        this.firstDate = responseData[0].date
+        this.cursorStart = this.firstDate
+        this.lastDate = responseData[responseData.length - 1].date
+        this.cursorEnd = this.lastDate
+      }
+    },
+    cursorStart: function () {
+      var result = []
+      for (let i = 0; i < this.batteryChartData.length; i++) {
+        let endOfTheDayOfEndCursor = (new Date(this.cursorEnd).getTime()) + 86400000
+        if ((this.batteryChartData[i].date >= new Date(this.cursorStart).getTime()) && (this.batteryChartData[i].date <= (endOfTheDayOfEndCursor))) {
+          result.push(this.batteryChartData[i])
+        }
+      }
+      this.batteryChartDisplayedData = result
+    },
+    cursorEnd: function () {
+      var result = []
+      for (let i = 0; i < this.batteryChartData.length; i++) {
+        let endOfTheDayOfEndCursor = (new Date(this.cursorEnd).getTime()) + 86400000
+        if ((this.batteryChartData[i].date >= new Date(this.cursorStart).getTime()) && (this.batteryChartData[i].date <= (endOfTheDayOfEndCursor))) {
+          result.push(this.batteryChartData[i])
+        }
+      }
+      this.batteryChartDisplayedData = result
     }
   },
   methods: {
@@ -214,7 +248,7 @@ export default {
             previousState = true
             _id = obj._id
             var startDateToTransform = new Date(obj.date)
-            startDate = Diver.dateFormater('#hhh# h #mm# le #DDD# #DD# #MMMM#', startDateToTransform)
+            startDate = Diver.dateFormatter('#hhh# h #mm# le #DDD# #DD# #MMMM#', startDateToTransform)
             switch (obj.plugType) { // wasn't plugged but is now
               case 'BATTERY_PLUGGED_USB' :
                 plugType = 'USB'
@@ -240,7 +274,7 @@ export default {
           } else { // was plugged and is not anymore
             previousState = false
             var endDateToTransform = new Date(obj.date)
-            endDate = Diver.dateFormater('#hhh# h #mm# le #DDD# #DD# #MMMM#', endDateToTransform)
+            endDate = Diver.dateFormatter('#hhh# h #mm# le #DDD# #DD# #MMMM#', endDateToTransform)
             dataToDisplay.push(
               {
                 '_id': _id,
@@ -276,18 +310,20 @@ export default {
         chartDataToDisplay.push({date: obj.date, lvl: obj.level})
       }
       this.batteryChartData = chartDataToDisplay
+      this.batteryChartDisplayedData = this.batteryChartData
+      // setup first,last date and cursors's date
+      if (responseData.length > 1) {
+        this.firstDate = responseData[0].date
+        this.cursorStart = this.firstDate
+        this.lastDate = responseData[responseData.length - 1].date
+        this.cursorEnd = this.lastDate
+      }
     },
     resize () {
       window.dispatchEvent(new Event('resize'))
     },
     dateFormatter (millisecondDate) {
-      /* var date, heure, min, day, month
-      date = new Date(millisecondDate)
-      heure = date.getHours()
-      this.traqueur = date.getHours()
-      return millisecondDate+'' */
-      // var longDate = new Date(millisecondDate).getTime()
-      return Diver.dateFormater('#hhh# h #mm# le #DDD# #DD# #MMMM#', millisecondDate)
+      return Diver.dateFormatter('#hhh# h #mm# le #DDD# #DD# #MMMM#', millisecondDate)
     }
   }
 }

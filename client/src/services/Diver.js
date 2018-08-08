@@ -182,7 +182,7 @@ export default {
    * @param date (in milliseconds)
    * @returns date string with chosen
    */
-  dateFormater (formatString, date) {
+  dateFormatter (formatString, date) {
     var YYYY, YY, MMMM, MMM, MM, M, DDDD, DDD, DD, D, hhhh, hhh, hh, h, mm, m, ss, s, ampm, AMPM, dMod, th
     var dateObject = new Date(date)
     YY = ((YYYY = dateObject.getFullYear()) + '').slice(-2)
