@@ -6,6 +6,7 @@ import Data1 from '@/pages/Data1'
 import Data2 from '@/pages/Data2'
 import BluetoothCharts from '@/pages/BluetoothCharts'
 import BatteryCharts from '@/pages/BatteryCharts'
+import CallLogsStats from '@/pages/CallLogsStats'
 
 Vue.use(Router)
 
@@ -40,6 +41,11 @@ export default new Router({
       path: '/battery',
       name: 'BatteryCharts',
       component: BatteryCharts
+    },
+    {
+      path: '/callLogs',
+      name: 'CallLogsStats',
+      component: CallLogsStats
     }
   ]
 })

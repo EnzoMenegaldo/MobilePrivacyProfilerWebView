@@ -23,6 +23,7 @@
                     :ymin= "auto"
                     :ymax= "auto"
                     :dateFormat="dateFormatter"
+                    :xLabelFormat="dateFormatter2"
                     line-colors='[ "#194bfa" ]'
                     grid="true"
                     grid-text-weight="bold"
@@ -324,6 +325,9 @@ export default {
     },
     dateFormatter (millisecondDate) {
       return Diver.dateFormatter('#hhh# h #mm# le #DDD# #DD# #MMMM#', millisecondDate)
+    },
+    dateFormatter2 (millisecondDate) {
+      return Diver.dateFormatter('#DD# #MMMM#', millisecondDate)
     }
   }
 }

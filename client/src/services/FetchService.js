@@ -9,5 +9,11 @@ export default {
   },
   fetchBatteryStates (params) {
     return Api().post('Battery', params)
+  },
+  fetchLogCalls (params) {
+    return Api().post('LogCalls', params)
+  },
+  fetchNameAndNumber (params) {
+    return Api().post('ContactName', params)
   }
 }

@@ -41,6 +41,12 @@
         </b-list-group>
       </b-col>
     </b-row>
+    <b-row>
+      <b-col>
+        <b-table striped outlined bordered footClone :items="callLogs" :fields="tableFields">
+        </b-table>
+      </b-col>
+    </b-row>
   </container>
 </template>
 
@@ -58,9 +64,38 @@ export default {
   data () {
     return {
       callLogs: [
-        {'_id': 0, 'phoneNumber': '1111111111', 'name': 'Titi', 'class': 'group-item-missed', 'icon': 'fa fa-question-circle fa-4x', 'type': 'Manqué', 'duration': 0, 'date': 1501100000000},
-        {'_id': 1, 'phoneNumber': '2222222222', 'name': 'Toto', 'class': 'group-item-incoming', 'icon': 'fa fa-arrow-circle-down fa-4x', 'type': 'Entrant', 'duration': 61, 'date': 1502200000000},
-        {'_id': 2, 'phoneNumber': '3333333333', 'name': 'Tutu', 'class': 'group-item-outcoming', 'icon': 'fa fa-arrow-circle-up fa-4x', 'type': 'Sortant', 'duration': 4000, 'date': 1503300000000}
+        {'_id': 0, 'phoneNumber': '1111111111', 'name': 'Titi', 'class': 'group-item-missed', 'icon': 'fa fa-question-circle fa-4x', 'type': 'Manqué', 'duration': 0, 'date': 1501100000000, "_rowVariant": 'danger'},
+        {'_id': 1, 'phoneNumber': '2222222222', 'name': 'Toto', 'class': 'group-item-incoming', 'icon': 'fa fa-arrow-circle-down fa-4x', 'type': 'Entrant', 'duration': 61, 'date': 1502200000000, "_rowVariant": 'info'},
+        {'_id': 2, 'phoneNumber': '3333333333', 'name': 'Tutu', 'class': 'group-item-outcoming', 'icon': 'fa fa-arrow-circle-up fa-4x', 'type': 'Sortant', 'duration': 4000, 'date': 1503300000000, "_rowVariant": 'success'}
+      ],
+      tableFields: [
+        {
+          key: 'type',
+          sortable: true,
+          label: 'Type'
+        },
+        {
+          key: 'name',
+          sortable: true,
+          label: 'Nom'
+        },
+        {
+          key: 'phoneNumber',
+          sortable: true,
+          label: 'Numéro de téléphone'
+        },
+        {
+          key: 'duration',
+          sortable: true,
+          label: 'Durée',
+          formatter: (value) => { return this.displayDuration(value)}
+        },
+        {
+          key: 'date',
+          sortable: true,
+          label: 'Date',
+          formatter: (value) => { return this.dateFormatter(value)}
+        }
       ],
       dummy: '06 10 70 26 31',
       traqueur: 0
@@ -83,7 +118,7 @@ export default {
       // for each call log
       for (let i = 0; i < responseData.length; i++) {
         // prepare item parameter
-        let _id, phoneNumber, date, _class , icon, type, duration, name
+        let _id, phoneNumber, date, _class , icon, type, duration, name, _rowVariant
         let obj = responseData[i]
         _id = obj._id
         phoneNumber = obj.phoneNumber
@@ -94,21 +129,25 @@ export default {
             _class = 'group-item-outcoming'
             icon = 'fa fa-arrow-circle-up fa-4x'
             type = 'Sortant'
+            _rowVariant= 'success'
             break
           case 'INCOMING' :
             _class = 'group-item-incoming'
             icon = 'fa fa-arrow-circle-down fa-4x'
             type = 'Entrant'
+            _rowVariant= 'info'
             break
           case 'MISSED' :
             _class = 'group-item-missed'
             icon = 'fa fa-question-circle fa-4x'
             type = 'Manqué'
+            _rowVariant= ''
             break
           default:
             _class = ''
             icon = 'fa fa-question-circle fa-4x'
             type = 'Unknown'
+            _rowVariant= 'danger'
             break
         }
         name = 'Inconnu'
@@ -122,17 +161,29 @@ export default {
             'icon': icon,
             'type': type,
             'duration': duration,
-            'date': date
+            'date': date,
+            '_rowVariant': _rowVariant
           }
         )
       } // end forEach log
       // request contact's phoneNumbers
-      let responseName = await FetchService.fetchNamefromNumber({ UserId: this.$store.state.activeUser })
+      let responseName = await FetchService.fetchNameAndNumber({ UserId: this.$store.state.activeUser })
       let responseNameData = responseName.data
       // looking for names from phone numbers and changing name = 'unknown' if possible
       for (let i = 0; i < dataToDisplay.length; i++) {
         let requestedContact = []
-        requestedContact = Diver.filter(responseNameData, {phoneNumber: dataToDisplay[i].phoneNumber})
+        let refPhoneNumber = Diver.spaceRemover(dataToDisplay[i].phoneNumber)
+        if (refPhoneNumber.length > 9) {
+          refPhoneNumber = refPhoneNumber.substring(refPhoneNumber.length - 9, refPhoneNumber - 1)
+        }
+        for (let j = 0; j < responseNameData.length; j++) {
+          let compPhoneNumber = Diver.spaceRemover(responseNameData[j].phoneNumber + '')
+          if (refPhoneNumber.length < 5 && (compPhoneNumber == refPhoneNumber)) {
+            requestedContact.push(responseNameData[j])
+          } else if (refPhoneNumber.length > 5 && compPhoneNumber.includes(refPhoneNumber)) {
+            requestedContact.push(responseNameData[j])
+          }
+        }
         if (requestedContact.length > 0) {
           dataToDisplay[i].name = requestedContact[requestedContact.length-1].displayName
         }

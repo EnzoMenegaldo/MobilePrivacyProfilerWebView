@@ -202,5 +202,44 @@ export default {
     mm = (m = dateObject.getMinutes()) < 10 ? ('0' + m) : m
     ss = (s = dateObject.getSeconds()) < 10 ? ('0' + s) : s
     return formatString.replace('#hhhh#', hhhh).replace('#hhh#', hhh).replace('#hh#', hh).replace('#h#', h).replace('#mm#', mm).replace('#m#', m).replace('#ss#', ss).replace('#s#', s).replace('#ampm#', ampm).replace('#AMPM#', AMPM)
+  },
+  /**
+   * Remove space from a string
+   * @param string
+   * @returns {string}
+   */
+  spaceRemover (string) {
+    let result = ''
+    for (let i = 0; i < string.length; i++) {
+      let caracter = string[i]
+      if (caracter != ' ') {
+        result = result + caracter
+      }
+    }
+    return result
+  },
+  /**
+   *var arr = [
+   { name: 'Steve', age: 18, color: 'red' },
+   { name: 'Louis', age: 21, color: 'blue' }, //*
+   { name: 'Mike', age: 20, color: 'green' },
+   { name: 'Greg', age: 21, color: 'blue' }, //*
+   { name: 'Josh', age: 18, color: 'red' }
+   ];
+
+   console.log(filter(arr, { age: 21, color: 'blue' }));
+   //^ {age:21, color:'blue', name:'Louis}
+   //  {age:21, color:'blue', name:'Greg'}
+
+   * @param arr
+   * @param criteria
+   * @returns {selection}
+   */
+  filter (arr, criteria) {
+    return arr.filter(function (obj) {
+      return Object.keys(criteria).every(function (c) {
+        return obj[c] == criteria[c]
+      })
+    })
   }
 }

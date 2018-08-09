@@ -13,16 +13,15 @@
   </b-row>
   <b-row align-h="center" >
     <b-col class="span" cols="5"><img src=".././assets/logo-sms.png" height="150px"></b-col>
-    <b-col class="span" cols="5"><img src="../assets/logo-phone.png" height="150px"></b-col>
+    <b-col class="span" cols="5"><router-link to="/callLogs"><img src="../assets/logo-phone.png" height="150px"></router-link></b-col>
   </b-row>
 </container>
 </template>
 
 <script>
-import BluetoothCharts from './BluetoothCharts'
 export default {
   name: 'Data1',
-  components: {BluetoothCharts},
+  components: {},
   computed: {
     activeUser () {
       return this.$store.state.activeUser

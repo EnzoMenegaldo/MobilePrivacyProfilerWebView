@@ -65,6 +65,46 @@ app.post('/Battery', (req, res) => {
     })
 })
 
+app.post('/LogCalls', (req, res) => {
+    db = startConnection (dbAdress)
+    console.log('LogCalls stats requested. UserId : '+req.body.UserId)
+    var userId = ''+req.body.UserId
+    db.all(
+        'SELECT _id, phoneNumber, date, duration, callType FROM phoneCallLog WHERE userId= ?',
+        [userId],
+        function(error, rows) {
+            res.send(rows)
+        }
+    )
+    db.close((err) => {
+        if(err==null) {console.log('Connection closed')}
+        else {console.error(err.message)
+        }
+    })
+})
+
+app.post('/ContactName', (req, res) => {
+    db = startConnection (dbAdress)
+    console.log('ContactName requested. UserId : '+req.body.UserId)
+    let userId = ''+req.body.UserId
+    db.all(
+        'SELECT c.displayName, cpn.phoneNumber\n' +
+        'FROM contact as c, contactPhoneNumber as cpn\n' +
+        'WHERE c.userId = ?\n' +
+        ' and c.android_id = cpn.contact_id\n' +
+        ' and cpn.userId = ?' ,
+        [userId,userId],
+        function(error, rows) {
+            res.send(rows)
+        }
+    )
+    db.close((err) => {
+        if(err==null) {console.log('Connection closed')}
+        else {console.error(err.message)
+        }
+    })
+})
+
 app.listen(process.env.PORT || 8081)
 
 function startConnection(dbAdress) {
