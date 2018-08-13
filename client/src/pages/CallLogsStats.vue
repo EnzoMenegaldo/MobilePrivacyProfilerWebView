@@ -8,7 +8,12 @@
     <b-row align-h="center">
       <b-clo>
         <div class="title">Journal des appels</div>
+        <!--
         <div>Traqueur : {{traqueur}}</div>
+        <div>Traqueur2 : {{traqueur2}}</div>
+        <div>Traqueur3 : {{traqueur3}}</div>
+        <div>Traqueur3bis : {{traqueur3bis}}</div>
+      -->
       </b-clo>
     </b-row>
     <b-row class="row" align-h="around" align-v="center">
@@ -16,29 +21,69 @@
         <img src=".././assets/logo-phone.png" height="200px"/>
       </b-col>
       <b-col cols="6">
-        <div>Liste des appels :</div>
-        <b-list-group class="list-group">
-          <b-list-group-item :class="callLog.class" v-for="callLog in callLogs" :key="callLog.date">
-            <container>
-              <b-row align-v="center" align-h="center">
-                <b-col cols="2"><i class="icon" :class="callLog.icon" aria-hidden="true"></i></b-col>
-                <b-col cols="9">
-                  <container>
-                    <b-row align-v="center" align-h="center">
-                      <b-col cols="auto"><div class="txtType">{{callLog.phoneNumber}}</div></b-col>
-                      <b-col cols="auto"><div class="txtType">{{callLog.name}}</div></b-col>
-                    </b-row>
-                    <b-row align-v="center" align-h="center">
-                      <b-col cols="auto"><div class="txtDate">{{callLog.type}}</div></b-col>
-                      <b-col cols="auto"><div class="txtDate">Durée : {{displayDuration(callLog.duration)}}</div></b-col>
-                      <b-col cols="auto"><div class="txtDate">{{dateFormatter(callLog.date)}}</div></b-col>
-                    </b-row>
-                  </container>
-                </b-col>
-              </b-row>
-            </container>
-          </b-list-group-item>
-        </b-list-group>
+        <div class="chartTitle">Statistiques des appels :</div>
+          <container>
+            <b-row class="statsCell"><b-col>Temps total d'appel : {{displayedTotalDuration}}</b-col></b-row>
+            <b-row class="statsCell"><b-col>Nombre total d'appel : {{callStats.totalNb}}</b-col></b-row>
+            <b-row align-h="start">
+              <b-col>
+                <container>
+                  <b-row><b-col class="titleStatsCell">Pourcentage d'appel : </b-col></b-row>
+                  <b-row ><b-col class="statsCell">- émit : {{outgoingCallPercentage}}</b-col></b-row>
+                  <b-row ><b-col class="statsCell">- reçu : {{incomingCallPercentage}}</b-col></b-row>
+                  <b-row ><b-col class="statsCell">- manqué : {{missedCallPercentage}}</b-col></b-row>
+                </container>
+              </b-col>
+              <b-col>
+                <container>
+                  <b-row class="titleStatsCell"><b-col>Temps moyen des appels :</b-col></b-row>
+                  <b-row ><b-col class="statsCell">- reçus : {{averageIncomingDuration}}</b-col></b-row>
+                  <b-row ><b-col class="statsCell">- émis : {{averageOutgoingDuration}}</b-col></b-row>
+                  <b-row ><b-col class="statsCell">.</b-col></b-row>
+                </container>
+              </b-col>
+            </b-row>
+            <b-row><b-col class="titleStatsCell">Quartiles : </b-col></b-row>
+            <b-row><b-col class="statsCell">Min : {{quartiles.min}}</b-col><b-col class="statsCell">Q1 : {{quartiles.q1}}</b-col></b-row>
+            <b-row><b-col class="statsCell">Médiane : {{quartiles.q2}}</b-col></b-row>
+            <b-row><b-col class="statsCell">Q3 : {{quartiles.q3}}</b-col><b-col class="statsCell">Max : {{quartiles.max}}</b-col></b-row>
+          </container>
+
+      </b-col>
+    </b-row>
+    <b-row>
+      <b-col offset="1" cols="5">
+        <div class="chartTitle">Nombre d'appel par contact :</div>
+        <div>
+          <bar-chart
+            id="activityByContactsCallNb"
+            :data="activityByContactsData"
+            xkey="name"
+            ykeys='[ "nbOfCall" ]'
+            bar-colors='[ "#36A2EB" ]'
+            grid="true"
+            grid-test-weight="bold"
+            hideHover="true"
+            resize="true"
+          ></bar-chart>
+        </div>
+      </b-col>
+      <b-col cols="5">
+        <div class="chartTitle">Temps d'appel par contact :</div>
+        <div>
+          <bar-chart
+            id="activityByContactsCallTime"
+            :data="activityByContactsData"
+            xkey="name"
+            ykeys='[ "callTime" ]'
+            :hoverCallback="hoverTextFormatter"
+            bar-colors='[ "#36A2EB" ]'
+            grid="true"
+            grid-test-weight="bold"
+            hideHover="true"
+            resize="true"
+          ></bar-chart>
+        </div>
       </b-col>
     </b-row>
     <b-row>
@@ -64,9 +109,14 @@ export default {
   data () {
     return {
       callLogs: [
-        {'_id': 0, 'phoneNumber': '1111111111', 'name': 'Titi', 'class': 'group-item-missed', 'icon': 'fa fa-question-circle fa-4x', 'type': 'Manqué', 'duration': 0, 'date': 1501100000000, "_rowVariant": 'danger'},
-        {'_id': 1, 'phoneNumber': '2222222222', 'name': 'Toto', 'class': 'group-item-incoming', 'icon': 'fa fa-arrow-circle-down fa-4x', 'type': 'Entrant', 'duration': 61, 'date': 1502200000000, "_rowVariant": 'info'},
-        {'_id': 2, 'phoneNumber': '3333333333', 'name': 'Tutu', 'class': 'group-item-outcoming', 'icon': 'fa fa-arrow-circle-up fa-4x', 'type': 'Sortant', 'duration': 4000, 'date': 1503300000000, "_rowVariant": 'success'}
+        {'_id': 0, 'phoneNumber': '1111111111', 'name': 'Titi', 'class': 'group-item-missed', 'icon': 'fa fa-question-circle fa-4x', 'type': 'Manqué', 'duration': 0, 'date': 1501100000000, '_rowVariant': 'danger'},
+        {'_id': 1, 'phoneNumber': '2222222222', 'name': 'Toto', 'class': 'group-item-incoming', 'icon': 'fa fa-arrow-circle-down fa-4x', 'type': 'Entrant', 'duration': 61, 'date': 1502200000000, '_rowVariant': 'info'},
+        {'_id': 2, 'phoneNumber': '3333333333', 'name': 'Tutu', 'class': 'group-item-outcoming', 'icon': 'fa fa-arrow-circle-up fa-4x', 'type': 'Sortant', 'duration': 4000, 'date': 1503300000000, '_rowVariant': 'success'}
+      ],
+      activityByContactsData: [
+        {name: 'Titi', nbOfCall: 70, callTime: 10},
+        {name: 'Toto', nbOfCall: 20, callTime: 20},
+        {name: 'Tutu', nbOfCall: 10, callTime: 70}
       ],
       tableFields: [
         {
@@ -88,25 +138,86 @@ export default {
           key: 'duration',
           sortable: true,
           label: 'Durée',
-          formatter: (value) => { return this.displayDuration(value)}
+          formatter: (value) => { return this.displayDuration(value) }
         },
         {
           key: 'date',
           sortable: true,
           label: 'Date',
-          formatter: (value) => { return this.dateFormatter(value)}
+          formatter: (value) => { return this.dateFormatter(value) }
         }
       ],
-      dummy: '06 10 70 26 31',
-      traqueur: 0
+      callStats: {
+        incomingNb: 0,
+        outcomingNb: 0,
+        missedNb: 0,
+        totalNb: 0,
+        totalCallDuration: 0,
+        incomingDuration: 0,
+        outgoingDuration: 0
+      },
+      traqueur: 0,
+      traqueur2: 0,
+      traqueur3: 0,
+      traqueur3bis: 0
     }
   },
   mounted () {
-    this.getBatteryStats(this.$store.state.activeUser)
+    this.getCallLogsStats(this.$store.state.activeUser)
   },
   computed: {
     activeUser: function () {
       return this.$store.state.activeUser
+    },
+    quartiles: function () {
+      let min, q1, q2, q3, max
+      min = 0
+      q1 = 0
+      q2 = 0
+      q3 = 0
+      max = 0
+      let tempArray = []
+      if (this.callLogs.length > 0) {
+        tempArray = this.sortByProperty(this.callLogs, 'duration')
+        let length = tempArray.length
+        min = tempArray[0].duration
+        max = tempArray[length - 1].duration
+        q1 = tempArray[Math.round((length - 1) * 0.25)].duration
+        q3 = tempArray[Math.round((length - 1) * 0.75)].duration
+        if (length % 2 === 0) {
+          q2 = Math.round(
+            (
+              tempArray[(length / 2) - 1].duration + tempArray[length / 2].duration
+            ) / 2
+          )
+        } else {
+          q2 = tempArray[Math.trunc(length / 2)].duration
+        }
+      }
+      return {
+        'min': this.displayDuration(min),
+        'q1': this.displayDuration(q1),
+        'q2': this.displayDuration(q2),
+        'q3': this.displayDuration(q3),
+        'max': this.displayDuration(max) }
+    },
+    outgoingCallPercentage: function () {
+      return this.displayPercentage(this.callStats.outcomingNb, this.callStats.totalNb)
+    },
+    displayedTotalDuration: function () {
+      return this.displayDuration(this.callStats.totalCallDuration)
+    },
+    missedCallPercentage: function () {
+      return this.displayPercentage(this.callStats.missedNb, this.callStats.totalNb)
+    },
+    incomingCallPercentage: function () {
+      return this.displayPercentage(this.callStats.incomingNb, this.callStats.totalNb)
+    },
+    averageIncomingDuration: function () {
+      return this.displayAverageDuration(this.callStats.incomingDuration, this.callStats.incomingNb)
+    },
+    averageOutgoingDuration: function () {
+      return this.displayAverageDuration(this.callStats.outgoingDuration, this.callStats.outcomingNb)
     }
   },
   components: { BarChart, DatePicker },
@@ -118,36 +229,36 @@ export default {
       // for each call log
       for (let i = 0; i < responseData.length; i++) {
         // prepare item parameter
-        let _id, phoneNumber, date, _class , icon, type, duration, name, _rowVariant
+        let _id, phoneNumber, date, _class, icon, type, duration, name, _rowVariant
         let obj = responseData[i]
         _id = obj._id
         phoneNumber = obj.phoneNumber
         date = obj.date
         duration = obj.duration
-        switch (obj.callType){
+        switch (obj.callType) {
           case 'OUTGOING' :
             _class = 'group-item-outcoming'
             icon = 'fa fa-arrow-circle-up fa-4x'
             type = 'Sortant'
-            _rowVariant= 'success'
+            _rowVariant = 'success'
             break
           case 'INCOMING' :
             _class = 'group-item-incoming'
             icon = 'fa fa-arrow-circle-down fa-4x'
             type = 'Entrant'
-            _rowVariant= 'info'
+            _rowVariant = 'info'
             break
           case 'MISSED' :
             _class = 'group-item-missed'
             icon = 'fa fa-question-circle fa-4x'
             type = 'Manqué'
-            _rowVariant= ''
+            _rowVariant = ''
             break
           default:
             _class = ''
             icon = 'fa fa-question-circle fa-4x'
             type = 'Unknown'
-            _rowVariant= 'danger'
+            _rowVariant = 'danger'
             break
         }
         name = 'Inconnu'
@@ -178,20 +289,191 @@ export default {
         }
         for (let j = 0; j < responseNameData.length; j++) {
           let compPhoneNumber = Diver.spaceRemover(responseNameData[j].phoneNumber + '')
-          if (refPhoneNumber.length < 5 && (compPhoneNumber == refPhoneNumber)) {
+          if (refPhoneNumber.length < 5 && (compPhoneNumber === refPhoneNumber)) {
             requestedContact.push(responseNameData[j])
           } else if (refPhoneNumber.length > 5 && compPhoneNumber.includes(refPhoneNumber)) {
             requestedContact.push(responseNameData[j])
           }
         }
         if (requestedContact.length > 0) {
-          dataToDisplay[i].name = requestedContact[requestedContact.length-1].displayName
+          dataToDisplay[i].name = requestedContact[requestedContact.length - 1].displayName
         }
       }
+      // now setting up callStats :
+      let incomingNb = 0
+      let outcomingNb = 0
+      let missedNb = 0
+      let totalNb = 0
+      let totalCallDuration = 0
+      let incomingDuration = 0
+      let outgoingDuration = 0
+      for (let i = 0; i < dataToDisplay.length; i++) {
+        switch (dataToDisplay[i].type) {
+          case 'Entrant' : incomingNb++
+            incomingDuration += dataToDisplay[i].duration
+            break
+          case 'Manqué' : missedNb++
+            break
+          case 'Sortant' : outcomingNb++
+            outgoingDuration += dataToDisplay[i].duration
+            break
+          default :
+            break
+        }
+        totalNb++
+        totalCallDuration += dataToDisplay[i].duration
+      }
+      this.callStats.incomingNb = incomingNb
+      this.callStats.outcomingNb = outcomingNb
+      this.callStats.missedNb = missedNb
+      this.callStats.totalNb = totalNb
+      this.callStats.totalCallDuration = totalCallDuration
+      this.callStats.incomingDuration = incomingDuration
+      this.callStats.outgoingDuration = outgoingDuration
+
       this.callLogs = dataToDisplay
+    },
+    callLogs: function () {
+      let result = []
+      for (let i = 0; i < this.callLogs.length; i++) {
+        this.traqueur3 = this.callLogs.length
+        this.traqueur3bis++
+        let callLogEntry = this.callLogs[i]
+        // is the entry related to a result entry?
+        let isInResult = false
+
+        for (let j = 0; !isInResult && j < result.length; j++) {
+          if (result[j].name === callLogEntry.name) {
+            this.traqueur++
+            isInResult = true
+            this.traqueur2++
+            result[j].nbOfCall = result[j].nbOfCall + 1
+            result[j].callTime = result[j].callTime + callLogEntry.duration
+          }
+        }
+        // if false : create new entry else update related entry
+        if (!isInResult) {
+          this.traqueur++
+          result.push(
+            {name: callLogEntry.name, nbOfCall: 1, callTime: callLogEntry.duration}
+          )
+        }
+      }
+      this.activityByContactsData = result
     }
   },
   methods: {
+    async getCallLogsStats (activeUser) {
+      const response = await FetchService.fetchLogCalls({ UserId: activeUser })
+      let responseData = response.data
+      let dataToDisplay = []
+      // for each call log
+      for (let i = 0; i < responseData.length; i++) {
+        // prepare item parameter
+        let _id, phoneNumber, date, _class, icon, type, duration, name, _rowVariant
+        let obj = responseData[i]
+        _id = obj._id
+        phoneNumber = obj.phoneNumber
+        date = obj.date
+        duration = obj.duration
+        switch (obj.callType) {
+          case 'OUTGOING' :
+            _class = 'group-item-outcoming'
+            icon = 'fa fa-arrow-circle-up fa-4x'
+            type = 'Sortant'
+            _rowVariant = 'success'
+            break
+          case 'INCOMING' :
+            _class = 'group-item-incoming'
+            icon = 'fa fa-arrow-circle-down fa-4x'
+            type = 'Entrant'
+            _rowVariant = 'info'
+            break
+          case 'MISSED' :
+            _class = 'group-item-missed'
+            icon = 'fa fa-question-circle fa-4x'
+            type = 'Manqué'
+            _rowVariant = ''
+            break
+          default:
+            _class = ''
+            icon = 'fa fa-question-circle fa-4x'
+            type = 'Unknown'
+            _rowVariant = 'danger'
+            break
+        }
+        name = 'Inconnu'
+        // add entry to the list
+        dataToDisplay.push(
+          {
+            '_id': _id,
+            'phoneNumber': phoneNumber,
+            'name': name,
+            'class': _class,
+            'icon': icon,
+            'type': type,
+            'duration': duration,
+            'date': date,
+            '_rowVariant': _rowVariant
+          }
+        )
+      } // end forEach log
+      // request contact's phoneNumbers
+      let responseName = await FetchService.fetchNameAndNumber({ UserId: this.$store.state.activeUser })
+      let responseNameData = responseName.data
+      // looking for names from phone numbers and changing name = 'unknown' if possible
+      for (let i = 0; i < dataToDisplay.length; i++) {
+        let requestedContact = []
+        let refPhoneNumber = Diver.spaceRemover(dataToDisplay[i].phoneNumber)
+        if (refPhoneNumber.length > 9) {
+          refPhoneNumber = refPhoneNumber.substring(refPhoneNumber.length - 9, refPhoneNumber - 1)
+        }
+        for (let j = 0; j < responseNameData.length; j++) {
+          let compPhoneNumber = Diver.spaceRemover(responseNameData[j].phoneNumber + '')
+          if (refPhoneNumber.length < 5 && (compPhoneNumber === refPhoneNumber)) {
+            requestedContact.push(responseNameData[j])
+          } else if (refPhoneNumber.length > 5 && compPhoneNumber.includes(refPhoneNumber)) {
+            requestedContact.push(responseNameData[j])
+          }
+        }
+        if (requestedContact.length > 0) {
+          dataToDisplay[i].name = requestedContact[requestedContact.length - 1].displayName
+        }
+      }
+      // now setting up callStats :
+      let incomingNb = 0
+      let outcomingNb = 0
+      let missedNb = 0
+      let totalNb = 0
+      let totalCallDuration = 0
+      let incomingDuration = 0
+      let outgoingDuration = 0
+      for (let i = 0; i < dataToDisplay.length; i++) {
+        switch (dataToDisplay[i].type) {
+          case 'Entrant' : incomingNb++
+            incomingDuration += dataToDisplay[i].duration
+            break
+          case 'Manqué' : missedNb++
+            break
+          case 'Sortant' : outcomingNb++
+            outgoingDuration += dataToDisplay[i].duration
+            break
+          default :
+            break
+        }
+        totalNb++
+        totalCallDuration += dataToDisplay[i].duration
+      }
+      this.callStats.incomingNb = incomingNb
+      this.callStats.outcomingNb = outcomingNb
+      this.callStats.missedNb = missedNb
+      this.callStats.totalNb = totalNb
+      this.callStats.totalCallDuration = totalCallDuration
+      this.callStats.incomingDuration = incomingDuration
+      this.callStats.outgoingDuration = outgoingDuration
+
+      this.callLogs = dataToDisplay
+    },
     resize () {
       window.dispatchEvent(new Event('resize'))
     },
@@ -203,9 +485,30 @@ export default {
         return Diver.dateFormatter('#s# s', (duration * 1000) + 82800000)
       } else if (duration < 3600) {
         return Diver.dateFormatter('#m# min #s# s', (duration * 1000) + 82800000)
-      } else {
+      } else if (duration < 86400) {
         return Diver.dateFormatter('#hhh# h #m# min #s# s', (duration * 1000) + 82800000)
+      } else {
+        return Math.trunc(duration / 86400) + ' j ' + Diver.dateFormatter('#hhh# h #m# min #s# s', (duration * 1000) + 82800000)
       }
+    },
+    displayPercentage (q, tot) {
+      if (tot === 0) { return '0 %' }
+      let result = ''
+      result = result + Math.round((q / tot) * 1000) / 10
+      return result + ' %'
+    },
+    displayAverageDuration (time, number) {
+      if (number === 0) { return 0 }
+      return this.displayDuration(Math.trunc(time / number))
+    },
+    sortByProperty (array, propertyName) {
+      return array.sort(function (a, b) {
+        return a[propertyName] - b[propertyName]
+      })
+    },
+    hoverTextFormatter (index, options, content, row) {
+      let txt = '<b>' + row.name + '</b><br/>' + ' Temps total : <font color="#00bfff">' + this.displayDuration(row.callTime) + '</font>'
+      return txt
     }
   }
 }
@@ -243,17 +546,30 @@ export default {
     font-weight: 900;
     color: #194bfa;
   }
-  .list-group{
-    max-height: 500px;
-    margin-bottom: 10px;
-    overflow:scroll;
-    -webkit-overflow-scrolling: touch;
+  .chartTitle
+  {
+    height: 40px;
+    padding: 15px;
+    margin: 10px;
+    margin-bottom: 20px;
+
+    font-size: 18px;
+    font-weight: 600;
+    color: #194bfa;
   }
-  .group-item-missed{
+  .statsCell{
     background-color: lightyellow;
+    border-style: solid;
+    border-width: .5px;
   }
-  .group-item-incoming{
-    background-color: #42b983;
+  .titleStatsCell{
+    font-weight: 300;
+    color: #194bfa;
+
+    background-color: #b9bbbe;
+    border-style: solid;
+    border-width: 1px;
+    border-color: #1b1e21;
   }
   .group-item-outcoming{
     background-color: #28a745;

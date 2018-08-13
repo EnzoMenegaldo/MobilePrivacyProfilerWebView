@@ -212,34 +212,11 @@ export default {
     let result = ''
     for (let i = 0; i < string.length; i++) {
       let caracter = string[i]
+      // eslint-disable-next-line
       if (caracter != ' ') {
         result = result + caracter
       }
     }
     return result
-  },
-  /**
-   *var arr = [
-   { name: 'Steve', age: 18, color: 'red' },
-   { name: 'Louis', age: 21, color: 'blue' }, //*
-   { name: 'Mike', age: 20, color: 'green' },
-   { name: 'Greg', age: 21, color: 'blue' }, //*
-   { name: 'Josh', age: 18, color: 'red' }
-   ];
-
-   console.log(filter(arr, { age: 21, color: 'blue' }));
-   //^ {age:21, color:'blue', name:'Louis}
-   //  {age:21, color:'blue', name:'Greg'}
-
-   * @param arr
-   * @param criteria
-   * @returns {selection}
-   */
-  filter (arr, criteria) {
-    return arr.filter(function (obj) {
-      return Object.keys(criteria).every(function (c) {
-        return obj[c] == criteria[c]
-      })
-    })
   }
 }
