@@ -15,5 +15,8 @@ export default {
   },
   fetchNameAndNumber (params) {
     return Api().post('ContactName', params)
+  },
+  fetchSMS (params) {
+    return Api().post('SMS', params)
   }
 }

@@ -185,9 +185,9 @@ export default {
   data () {
     return {
       callLogs: [
-        {'_id': 0, 'phoneNumber': '1111111111', 'name': 'Titi', 'class': 'group-item-missed', 'icon': 'fa fa-question-circle fa-4x', 'type': 'Manqué', 'duration': 0, 'date': 1501100000000, '_rowVariant': 'danger'},
-        {'_id': 1, 'phoneNumber': '2222222222', 'name': 'Toto', 'class': 'group-item-incoming', 'icon': 'fa fa-arrow-circle-down fa-4x', 'type': 'Entrant', 'duration': 61, 'date': 1502200000000, '_rowVariant': 'info'},
-        {'_id': 2, 'phoneNumber': '3333333333', 'name': 'Tutu', 'class': 'group-item-outcoming', 'icon': 'fa fa-arrow-circle-up fa-4x', 'type': 'Sortant', 'duration': 4000, 'date': 1503300000000, '_rowVariant': 'success'}
+        {'_id': 0, 'phoneNumber': '1111111111', 'name': 'Titi', 'type': 'Manqué', 'duration': 0, 'date': 1501100000000, '_rowVariant': 'danger'},
+        {'_id': 1, 'phoneNumber': '2222222222', 'name': 'Toto', 'type': 'Entrant', 'duration': 61, 'date': 1502200000000, '_rowVariant': 'info'},
+        {'_id': 2, 'phoneNumber': '3333333333', 'name': 'Tutu', 'type': 'Sortant', 'duration': 4000, 'date': 1503300000000, '_rowVariant': 'success'}
       ],
       activityByContactsData: [
         {name: 'Titi', nbOfCall: 70, callTime: 10},
@@ -271,7 +271,7 @@ export default {
     }
   },
   mounted () {
-    this.getCallLogsStats(this.$store.state.activeUser)
+    this.getCallLogsStats()
   },
   computed: {
     activeUser: function () {
@@ -339,122 +339,7 @@ export default {
       this.generateActivityOverTheDay()
     },
     activeUser: async function () {
-      const response = await FetchService.fetchLogCalls({ UserId: this.$store.state.activeUser })
-      let responseData = response.data
-      let dataToDisplay = []
-      let firstDate = null
-      let lastDate = null
-      // for each call log
-      for (let i = 0; i < responseData.length; i++) {
-        // prepare item parameter
-        let _id, phoneNumber, date, _class, icon, type, duration, name, _rowVariant
-        let obj = responseData[i]
-        _id = obj._id
-        phoneNumber = obj.phoneNumber
-        date = obj.date
-        if (firstDate == null || date < firstDate) { firstDate = date }
-        if (lastDate == null || date > lastDate) { lastDate = date }
-        duration = obj.duration
-        switch (obj.callType) {
-          case 'OUTGOING' :
-            _class = 'group-item-outcoming'
-            icon = 'fa fa-arrow-circle-up fa-4x'
-            type = 'Sortant'
-            _rowVariant = 'success'
-            break
-          case 'INCOMING' :
-            _class = 'group-item-incoming'
-            icon = 'fa fa-arrow-circle-down fa-4x'
-            type = 'Entrant'
-            _rowVariant = 'info'
-            break
-          case 'MISSED' :
-            _class = 'group-item-missed'
-            icon = 'fa fa-question-circle fa-4x'
-            type = 'Manqué'
-            _rowVariant = ''
-            break
-          default:
-            _class = ''
-            icon = 'fa fa-question-circle fa-4x'
-            type = 'Unknown'
-            _rowVariant = 'danger'
-            break
-        }
-        name = 'Inconnu'
-        // add entry to the list
-        dataToDisplay.push(
-          {
-            '_id': _id,
-            'phoneNumber': phoneNumber,
-            'name': name,
-            'class': _class,
-            'icon': icon,
-            'type': type,
-            'duration': duration,
-            'date': date,
-            '_rowVariant': _rowVariant
-          }
-        )
-      } // end forEach log
-      // request contact's phoneNumbers
-      let responseName = await FetchService.fetchNameAndNumber({ UserId: this.$store.state.activeUser })
-      let responseNameData = responseName.data
-      // looking for names from phone numbers and changing name = 'unknown' if possible
-      for (let i = 0; i < dataToDisplay.length; i++) {
-        let requestedContact = []
-        let refPhoneNumber = Diver.spaceRemover(dataToDisplay[i].phoneNumber)
-        if (refPhoneNumber.length > 9) {
-          refPhoneNumber = refPhoneNumber.substring(refPhoneNumber.length - 9, refPhoneNumber - 1)
-        }
-        for (let j = 0; j < responseNameData.length; j++) {
-          let compPhoneNumber = Diver.spaceRemover(responseNameData[j].phoneNumber + '')
-          if (refPhoneNumber.length < 5 && (compPhoneNumber === refPhoneNumber)) {
-            requestedContact.push(responseNameData[j])
-          } else if (refPhoneNumber.length > 5 && compPhoneNumber.includes(refPhoneNumber)) {
-            requestedContact.push(responseNameData[j])
-          }
-        }
-        if (requestedContact.length > 0) {
-          dataToDisplay[i].name = requestedContact[requestedContact.length - 1].displayName
-        }
-      }
-      // now setting up callStats :
-      let incomingNb = 0
-      let outcomingNb = 0
-      let missedNb = 0
-      let totalNb = 0
-      let totalCallDuration = 0
-      let incomingDuration = 0
-      let outgoingDuration = 0
-      for (let i = 0; i < dataToDisplay.length; i++) {
-        switch (dataToDisplay[i].type) {
-          case 'Entrant' : incomingNb++
-            incomingDuration += dataToDisplay[i].duration
-            break
-          case 'Manqué' : missedNb++
-            break
-          case 'Sortant' : outcomingNb++
-            outgoingDuration += dataToDisplay[i].duration
-            break
-          default :
-            break
-        }
-        totalNb++
-        totalCallDuration += dataToDisplay[i].duration
-      }
-      this.callStats.incomingNb = incomingNb
-      this.callStats.outcomingNb = outcomingNb
-      this.callStats.missedNb = missedNb
-      this.callStats.totalNb = totalNb
-      this.callStats.totalCallDuration = totalCallDuration
-      this.callStats.incomingDuration = incomingDuration
-      this.callStats.outgoingDuration = outgoingDuration
-
-      this.firstDate = firstDate
-      this.lastDate = lastDate
-
-      this.callLogs = dataToDisplay
+      this.fetchAndProcessCallLogsData()
     },
     callLogs: function () {
       let result = []
@@ -530,41 +415,37 @@ export default {
       }
       this.activityOverTheDay = result
     },
-    async getCallLogsStats (activeUser) {
-      const response = await FetchService.fetchLogCalls({ UserId: activeUser })
+    async fetchAndProcessCallLogsData () {
+      const response = await FetchService.fetchLogCalls({ UserId: this.$store.state.activeUser })
       let responseData = response.data
       let dataToDisplay = []
+      let firstDate = null
+      let lastDate = null
       // for each call log
       for (let i = 0; i < responseData.length; i++) {
         // prepare item parameter
-        let _id, phoneNumber, date, _class, icon, type, duration, name, _rowVariant
+        let _id, phoneNumber, date, type, duration, name, _rowVariant
         let obj = responseData[i]
         _id = obj._id
         phoneNumber = obj.phoneNumber
         date = obj.date
+        if (firstDate == null || date < firstDate) { firstDate = date }
+        if (lastDate == null || date > lastDate) { lastDate = date }
         duration = obj.duration
         switch (obj.callType) {
           case 'OUTGOING' :
-            _class = 'group-item-outcoming'
-            icon = 'fa fa-arrow-circle-up fa-4x'
             type = 'Sortant'
             _rowVariant = 'success'
             break
           case 'INCOMING' :
-            _class = 'group-item-incoming'
-            icon = 'fa fa-arrow-circle-down fa-4x'
             type = 'Entrant'
             _rowVariant = 'info'
             break
           case 'MISSED' :
-            _class = 'group-item-missed'
-            icon = 'fa fa-question-circle fa-4x'
             type = 'Manqué'
             _rowVariant = ''
             break
           default:
-            _class = ''
-            icon = 'fa fa-question-circle fa-4x'
             type = 'Unknown'
             _rowVariant = 'danger'
             break
@@ -576,8 +457,6 @@ export default {
             '_id': _id,
             'phoneNumber': phoneNumber,
             'name': name,
-            'class': _class,
-            'icon': icon,
             'type': type,
             'duration': duration,
             'date': date,
@@ -639,7 +518,13 @@ export default {
       this.callStats.incomingDuration = incomingDuration
       this.callStats.outgoingDuration = outgoingDuration
 
+      this.firstDate = firstDate
+      this.lastDate = lastDate
+
       this.callLogs = dataToDisplay
+    },
+    async getCallLogsStats () {
+      this.fetchAndProcessCallLogsData()
     },
     resize () {
       window.dispatchEvent(new Event('resize'))

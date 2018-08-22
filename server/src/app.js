@@ -105,6 +105,24 @@ app.post('/ContactName', (req, res) => {
     })
 })
 
+app.post('/SMS', (req, res) => {
+    db = startConnection (dbAdress)
+    console.log('LogCalls stats requested. UserId : '+req.body.UserId)
+    var userId = ''+req.body.UserId
+    db.all(
+        'SELECT _id, date, phoneNumber, type FROM sMS WHERE userId= ?',
+        [userId],
+        function(error, rows) {
+            res.send(rows)
+        }
+    )
+    db.close((err) => {
+        if(err==null) {console.log('Connection closed')}
+        else {console.error(err.message)
+        }
+    })
+})
+
 app.listen(process.env.PORT || 8081)
 
 function startConnection(dbAdress) {
