@@ -8,13 +8,87 @@
     <b-row align-h="center">
       <b-clo>
         <div class="title">Journal des appels</div>
-        <!--
-        <div>Traqueur : {{traqueur}}</div>
-        <div>Traqueur2 : {{traqueur2}}</div>
-        <div>Traqueur3 : {{traqueur3}}</div>
-        <div>Traqueur3bis : {{traqueur3bis}}</div>
-      -->
       </b-clo>
+    </b-row>
+    <b-row align-h="center">
+      <b-col cols="auto"><div>Début :</div><date-picker v-model="cursorStart" lang="fr" :not-before="firstDate" :not-after="cursorEnd" confirm></date-picker></b-col>
+      <b-col cols="auto"><div>Fin :</div><date-picker v-model="cursorEnd" lang="fr" :not-before="cursorStart" :not-after="lastDate" confirm></date-picker></b-col>
+    </b-row>
+    <b-row>
+      <b-col offset="1" cols="5">
+        <div class="chartTitle">Nombre d'appel par jour</div><div> (dans la période sélectionnée)</div>
+        <div>
+          <bar-chart
+            id="activityOverTimeNb"
+            :data="activityOverTime"
+            xkey="day"
+            ykeys='[ "nb" ]'
+            bar-colors='[ "#36A2EB" ]'
+            :hoverCallback="hoverTextFormatterForNbOverTime"
+            axes="false"
+            grid="true"
+            grid-test-weight="bold"
+            hideHover="true"
+            resize="true"
+          ></bar-chart>
+        </div>
+      </b-col>
+      <b-col cols="5">
+        <div class="chartTitle">Temps d'appel par jour</div><div> (dans la période sélectionnée)</div>
+        <div>
+          <bar-chart
+            id="activityOverTimeDuration"
+            :data="activityOverTime"
+            xkey="day"
+            ykeys='[ "duration" ]'
+            bar-colors='[ "#36A2EB" ]'
+            :hoverCallback="hoverTextFormatterForDurationOverTime"
+            axes="false"
+            grid="true"
+            grid-test-weight="bold"
+            hideHover="true"
+            resize="true"
+          ></bar-chart>
+        </div>
+      </b-col>
+    </b-row>
+    <b-row>
+      <b-col offset="1" cols="5">
+        <div class="chartTitle">Nombre d'appel par heure de la journée</div><div> (dans la période sélectionnée)</div>
+        <div>
+          <bar-chart
+            id="activityOverTheDayNb"
+            :data="activityOverTheDay"
+            xkey="hour"
+            ykeys='[ "nb" ]'
+            bar-colors='[ "#36A2EB" ]'
+            :hoverCallback="hoverTextFormatterForNbOverDay"
+            axes="false"
+            grid="true"
+            grid-test-weight="bold"
+            hideHover="true"
+            resize="true"
+          ></bar-chart>
+        </div>
+      </b-col>
+      <b-col cols="5">
+        <div class="chartTitle">Temps d'appel par heure de la journée</div><div> (dans la période sélectionnée)</div>
+        <div>
+          <bar-chart
+            id="activityOverTheDayTime"
+            :data="activityOverTheDay"
+            xkey="hour"
+            ykeys='[ "duration" ]'
+            bar-colors='[ "#36A2EB" ]'
+            :hoverCallback="hoverTextFormatterForDurationOverDay"
+            axes="false"
+            grid="true"
+            grid-test-weight="bold"
+            hideHover="true"
+            resize="true"
+          ></bar-chart>
+        </div>
+      </b-col>
     </b-row>
     <b-row class="row" align-h="around" align-v="center">
       <b-col cols="4">
@@ -61,6 +135,7 @@
             xkey="name"
             ykeys='[ "nbOfCall" ]'
             bar-colors='[ "#36A2EB" ]'
+            axes="false"
             grid="true"
             grid-test-weight="bold"
             hideHover="true"
@@ -78,6 +153,7 @@
             ykeys='[ "callTime" ]'
             :hoverCallback="hoverTextFormatter"
             bar-colors='[ "#36A2EB" ]'
+            axes="false"
             grid="true"
             grid-test-weight="bold"
             hideHover="true"
@@ -156,10 +232,42 @@ export default {
         incomingDuration: 0,
         outgoingDuration: 0
       },
-      traqueur: 0,
-      traqueur2: 0,
-      traqueur3: 0,
-      traqueur3bis: 0
+      firstDate: 14,
+      cursorStart: 14,
+      cursorEnd: 86400014,
+      lastDate: 86400014,
+      activityOverTheDay: [
+        {hour: 0, duration: 0, nb: 0},
+        {hour: 1, duration: 12, nb: 1},
+        {hour: 2, duration: 600, nb: 2},
+        {hour: 3, duration: 0, nb: 0},
+        {hour: 4, duration: 0, nb: 0},
+        {hour: 5, duration: 0, nb: 0},
+        {hour: 6, duration: 0, nb: 0},
+        {hour: 7, duration: 0, nb: 0},
+        {hour: 8, duration: 0, nb: 0},
+        {hour: 9, duration: 0, nb: 0},
+        {hour: 10, duration: 0, nb: 0},
+        {hour: 11, duration: 0, nb: 0},
+        {hour: 12, duration: 0, nb: 0},
+        {hour: 13, duration: 0, nb: 0},
+        {hour: 14, duration: 0, nb: 0},
+        {hour: 15, duration: 0, nb: 0},
+        {hour: 16, duration: 0, nb: 0},
+        {hour: 17, duration: 0, nb: 0},
+        {hour: 18, duration: 0, nb: 0},
+        {hour: 19, duration: 0, nb: 0},
+        {hour: 20, duration: 0, nb: 0},
+        {hour: 21, duration: 0, nb: 0},
+        {hour: 22, duration: 0, nb: 0},
+        {hour: 23, duration: 0, nb: 0}
+      ],
+      activityOverTime: [
+        {day: 1501100000000, duration: 500, nb: 2},
+        {day: 1501186400000, duration: 500, nb: 2},
+        {day: 1501272800000, duration: 5000, nb: 20},
+        {day: 1501359200000, duration: 400, nb: 6}
+      ]
     }
   },
   mounted () {
@@ -222,10 +330,20 @@ export default {
   },
   components: { BarChart, DatePicker },
   watch: {
+    cursorStart: function () {
+      this.generateActivityOverTime()
+      this.generateActivityOverTheDay()
+    },
+    cursorEnd: function () {
+      this.generateActivityOverTime()
+      this.generateActivityOverTheDay()
+    },
     activeUser: async function () {
       const response = await FetchService.fetchLogCalls({ UserId: this.$store.state.activeUser })
       let responseData = response.data
       let dataToDisplay = []
+      let firstDate = null
+      let lastDate = null
       // for each call log
       for (let i = 0; i < responseData.length; i++) {
         // prepare item parameter
@@ -234,6 +352,8 @@ export default {
         _id = obj._id
         phoneNumber = obj.phoneNumber
         date = obj.date
+        if (firstDate == null || date < firstDate) { firstDate = date }
+        if (lastDate == null || date > lastDate) { lastDate = date }
         duration = obj.duration
         switch (obj.callType) {
           case 'OUTGOING' :
@@ -331,38 +451,85 @@ export default {
       this.callStats.incomingDuration = incomingDuration
       this.callStats.outgoingDuration = outgoingDuration
 
+      this.firstDate = firstDate
+      this.lastDate = lastDate
+
       this.callLogs = dataToDisplay
     },
     callLogs: function () {
       let result = []
       for (let i = 0; i < this.callLogs.length; i++) {
-        this.traqueur3 = this.callLogs.length
-        this.traqueur3bis++
         let callLogEntry = this.callLogs[i]
         // is the entry related to a result entry?
         let isInResult = false
 
         for (let j = 0; !isInResult && j < result.length; j++) {
           if (result[j].name === callLogEntry.name) {
-            this.traqueur++
             isInResult = true
-            this.traqueur2++
-            result[j].nbOfCall = result[j].nbOfCall + 1
-            result[j].callTime = result[j].callTime + callLogEntry.duration
+            result[j].nbOfCall++
+            result[j].callTime += callLogEntry.duration
           }
         }
         // if false : create new entry else update related entry
         if (!isInResult) {
-          this.traqueur++
           result.push(
             {name: callLogEntry.name, nbOfCall: 1, callTime: callLogEntry.duration}
           )
         }
       }
       this.activityByContactsData = result
+      this.cursorStart = this.firstDate
+      this.cursorEnd = this.lastDate
+      this.generateActivityOverTime()
+      this.generateActivityOverTheDay()
     }
   },
   methods: {
+    generateActivityOverTime () {
+      let result = []
+      // initialize result object
+      // get the start of the day from cursorStart
+      let tempDate = (new Date(this.cursorStart) + '').substring(0, 15)
+      let cursorStartOfDay = new Date(tempDate).getTime()
+      let cursorEndLong = new Date(this.cursorEnd).getTime()
+      let numberOfEntry = Math.trunc((cursorEndLong - cursorStartOfDay) / 86400000)
+      for (let j = 0; j < numberOfEntry; j++) {
+        result.push({ day: (cursorStartOfDay + j * 86400000), nb: 0, duration: 0 })
+      }
+      // for every collLog in time range
+      for (let i = 0; i < this.callLogs.length; i++) {
+        let endOfTheDayOfEndCursor = (new Date(this.cursorEnd).getTime()) + 86400000
+        if ((this.callLogs[i].date >= new Date(this.cursorStart).getTime()) && (this.callLogs[i].date <= (endOfTheDayOfEndCursor))) {
+          let hasToBeProcessed = true
+
+          for (let k = 0; hasToBeProcessed && (k < result.length); k++) {
+            if (this.callLogs[i].date < result[k].day + 86400000) {
+              hasToBeProcessed = false
+              result[k].nb++
+              result[k].duration += this.callLogs[i].duration
+            }
+          }
+        }
+      }
+      this.activityOverTime = result
+    },
+    generateActivityOverTheDay () {
+      let result = []
+      // initialize result object
+      for (let i = 0; i < 24; i++) {
+        result.push({hour: i, duration: 0, nb: 0})
+      }
+      // modify proper result entry if the entry qualify for selected time selection
+      for (let i = 0; i < this.callLogs.length; i++) {
+        let endOfTheDayOfEndCursor = (new Date(this.cursorEnd).getTime()) + 86400000
+        if ((this.callLogs[i].date >= new Date(this.cursorStart).getTime()) && (this.callLogs[i].date <= (endOfTheDayOfEndCursor))) {
+          let resultEntryToUpdate = new Date(this.callLogs[i].date).getHours()
+          result[resultEntryToUpdate].duration = result[resultEntryToUpdate].duration + this.callLogs[i].duration
+          result[resultEntryToUpdate].nb = result[resultEntryToUpdate].nb + 1
+        }
+      }
+      this.activityOverTheDay = result
+    },
     async getCallLogsStats (activeUser) {
       const response = await FetchService.fetchLogCalls({ UserId: activeUser })
       let responseData = response.data
@@ -509,6 +676,22 @@ export default {
     hoverTextFormatter (index, options, content, row) {
       let txt = '<b>' + row.name + '</b><br/>' + ' Temps total : <font color="#00bfff">' + this.displayDuration(row.callTime) + '</font>'
       return txt
+    },
+    hoverTextFormatterForNbOverDay (index, options, content, row) {
+      let txt = '<b>' + row.hour + ' h </b><br/>' + ' Nombre d\'appel : <font color="#00bfff">' + row.nb + '</font>'
+      return txt
+    },
+    hoverTextFormatterForDurationOverDay (index, options, content, row) {
+      let txt = '<b>' + row.hour + ' h </b><br/>' + ' Durée d\'appel : <font color="#00bfff">' + this.displayDuration(row.duration) + '</font>'
+      return txt
+    },
+    hoverTextFormatterForNbOverTime (index, options, content, row) {
+      let txt = '<b>' + Diver.dateFormatter('#DDD# #DD# #MMMM# #YYYY#', row.day) + ' </b><br/>' + ' Nombre d\'appel : <font color="#00bfff">' + row.nb + '</font>'
+      return txt
+    },
+    hoverTextFormatterForDurationOverTime (index, options, content, row) {
+      let txt = '<b>' + Diver.dateFormatter('#DDD# #DD# #MMMM# #YYYY#', row.day) + ' </b><br/>' + ' Temps d\'appel : <font color="#00bfff">' + this.displayDuration(row.duration) + '</font>'
+      return txt
     }
   }
 }
@@ -550,8 +733,7 @@ export default {
   {
     height: 40px;
     padding: 15px;
-    margin: 10px;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
 
     font-size: 18px;
     font-weight: 600;
