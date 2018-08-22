@@ -7,6 +7,7 @@ import Data2 from '@/pages/Data2'
 import BluetoothCharts from '@/pages/BluetoothCharts'
 import BatteryCharts from '@/pages/BatteryCharts'
 import CallLogsStats from '@/pages/CallLogsStats'
+import SMSCharts from '@/pages/SMSCharts'
 
 Vue.use(Router)
 
@@ -46,6 +47,11 @@ export default new Router({
       path: '/callLogs',
       name: 'CallLogsStats',
       component: CallLogsStats
+    },
+    {
+      path: '/SMS',
+      name: 'SMSCharts',
+      component: SMSCharts
     }
   ]
 })

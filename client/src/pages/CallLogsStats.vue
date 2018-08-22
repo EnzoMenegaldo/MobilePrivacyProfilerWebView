@@ -698,9 +698,6 @@ export default {
 </script>
 
 <style scoped>
-  .chart{
-    margin: 20px;
-  }
   .firstRow{
     margin-top: 20px;
   }
@@ -752,19 +749,5 @@ export default {
     border-style: solid;
     border-width: 1px;
     border-color: #1b1e21;
-  }
-  .group-item-outcoming{
-    background-color: #28a745;
-  }
-  .icon{
-    color: #194bfa;
-  }
-  .txtType{
-    font-weight: 900;
-    font-size: 16px;
-    color: #000000;
-  }
-  .txtDate{
-    font-size: 14px;
   }
 </style>
