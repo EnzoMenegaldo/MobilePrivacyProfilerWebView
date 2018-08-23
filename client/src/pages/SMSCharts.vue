@@ -224,7 +224,6 @@ export default {
       this.fetchAndProcessSMSData()
     },
     SMSs: function () {
-
       let result = []
       for (let i = 0; i < this.SMSs.length; i++) {
         let SMSsEntry = this.SMSs[i]
@@ -423,24 +422,24 @@ export default {
       return result + ' %'
     },
     hoverTextFormatterForActivityByContactSMS (index, options, content, row) {
-      let txt = '<b>' +  row.name + ' </b>'
-        + '<br/> Messages émits : <font color="#00bfff">' + row.emit + ' (' + this.displayPercentage(row.emit, row.nbOfMsg) + ')'  +  '</font>'
-        + '<br/> Messages reçus : <font color="#00bfff">' + row.recu + ' (' + this.displayPercentage(row.recu, row.nbOfMsg) + ')'  + '</font>'
-        + '<br/> Total messages : <font color="#00bfff">' + row.nbOfMsg + '</font>'
+      let txt = '<b>' + row.name + ' </b>' +
+        '<br/> Messages émits : <font color="#00bfff">' + row.emit + ' (' + this.displayPercentage(row.emit, row.nbOfMsg) + ')' + '</font>' +
+        '<br/> Messages reçus : <font color="#00bfff">' + row.recu + ' (' + this.displayPercentage(row.recu, row.nbOfMsg) + ')' + '</font>' +
+        '<br/> Total messages : <font color="#00bfff">' + row.nbOfMsg + '</font>'
       return txt
     },
     hoverTextFormatterForActivityOverTheDaySMS (index, options, content, row) {
-      let txt = '<b>' +  row.hour + ' h </b>'
-        + '<br/> Messages émits : <font color="#00bfff">' + row.emit + ' (' + this.displayPercentage(row.emit, row.nb) + ')'  +  '</font>'
-        + '<br/> Messages reçus : <font color="#00bfff">' + row.recu + ' (' + this.displayPercentage(row.recu, row.nb) + ')'  + '</font>'
-        + '<br/> Total messages : <font color="#00bfff">' + row.nb + '</font>'
+      let txt = '<b>' + row.hour + ' h </b>' +
+        '<br/> Messages émits : <font color="#00bfff">' + row.emit + ' (' + this.displayPercentage(row.emit, row.nb) + ')' + '</font>' +
+        '<br/> Messages reçus : <font color="#00bfff">' + row.recu + ' (' + this.displayPercentage(row.recu, row.nb) + ')' + '</font>' +
+        '<br/> Total messages : <font color="#00bfff">' + row.nb + '</font>'
       return txt
     },
     hoverTextFormatterForActivityOverTimeSMS (index, options, content, row) {
-      let txt = '<b>' +  Diver.dateFormatter('#DDD# #DD# #MMMM# #YYYY#', row.day) + ' </b>'
-        + '<br/> Messages émits : <font color="#00bfff">' + row.emit + ' (' + this.displayPercentage(row.emit, row.nb) + ')'  +  '</font>'
-        + '<br/> Messages reçus : <font color="#00bfff">' + row.recu + ' (' + this.displayPercentage(row.recu, row.nb) + ')'  + '</font>'
-        + '<br/> Total messages : <font color="#00bfff">' + row.nb + '</font>'
+      let txt = '<b>' + Diver.dateFormatter('#DDD# #DD# #MMMM# #YYYY#', row.day) + ' </b>' +
+        '<br/> Messages émits : <font color="#00bfff">' + row.emit + ' (' + this.displayPercentage(row.emit, row.nb) + ')' + '</font>' +
+        '<br/> Messages reçus : <font color="#00bfff">' + row.recu + ' (' + this.displayPercentage(row.recu, row.nb) + ')' + '</font>' +
+        '<br/> Total messages : <font color="#00bfff">' + row.nb + '</font>'
       return txt
     }
   }
