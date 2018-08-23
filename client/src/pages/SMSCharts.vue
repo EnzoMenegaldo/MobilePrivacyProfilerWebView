@@ -8,48 +8,100 @@
     <b-row align-h="center">
       <b-clo>
         <div class="title">Statistiques des SMS</div>
-        <div>Traqueur : {{traqueur}}</div>
-        <div>Traqueur2 : {{traqueur2}}</div>
-        <div>Traqueur3 : {{traqueur3}}</div>
-        <div>Traqueur4 : {{traqueur4}}</div>
       </b-clo>
     </b-row>
     <b-row align-h="center">
       <b-col cols="auto"><div>Début :</div><date-picker v-model="cursorStart" lang="fr" :not-before="firstDate" :not-after="cursorEnd" confirm></date-picker></b-col>
       <b-col cols="auto"><div>Fin :</div><date-picker v-model="cursorEnd" lang="fr" :not-before="cursorStart" :not-after="lastDate" confirm></date-picker></b-col>
     </b-row>
+    <b-row>
+      <b-col>
+        <div class="chartTitle">Nombre de message par heure de la journée</div>
+        <div>
+          <bar-chart
+            id="activityOverTimeSMS"
+            :data="activityOverTime"
+            xkey="day"
+            ykeys='[ "emit","recu" ]'
+            bar-colors='[ "#186717","#152992" ]'
+            :hoverCallback="hoverTextFormatterForActivityOverTimeSMS"
+            axes="false"
+            stacked="true"
+            grid="true"
+            grid-test-weight="bold"
+            hideHover="true"
+            resize="true"
+          ></bar-chart>
+        </div>
+      </b-col>
+    </b-row>
+    <b-row>
+      <b-col>
+        <div class="chartTitle">Nombre de message par heure de la journée</div>
+        <div>
+          <bar-chart
+            id="activityOverTheDaySMS"
+            :data="activityOverTheDay"
+            xkey="hour"
+            ykeys='[ "emit","recu" ]'
+            bar-colors='[ "#186717","#152992" ]'
+            :hoverCallback="hoverTextFormatterForActivityOverTheDaySMS"
+            axes="false"
+            stacked="true"
+            grid="true"
+            grid-test-weight="bold"
+            hideHover="true"
+            resize="true"
+          ></bar-chart>
+        </div>
+      </b-col>
+    </b-row>
     <b-row class="row" align-h="around" align-v="center">
       <b-col cols="4">
         <img src=".././assets/logo-sms.png" height="200px"/>
       </b-col>
       <b-col cols="6">
-        <div class="chartTitle">Statistiques :</div>
+        <div class="chartTitle">Statistiques</div>
         <container>
-          <b-row class="statsCell"><b-col>Temps total d'appel : </b-col></b-row>
-          <b-row class="statsCell"><b-col>Nombre total d'appel : </b-col></b-row>
+          <b-row class="statsCell"><b-col>Nombre total de messages : {{Stats.totalNb}}</b-col></b-row>
           <b-row align-h="start">
             <b-col>
               <container>
-                <b-row><b-col class="titleStatsCell">Pourcentage d'appel : </b-col></b-row>
-                <b-row ><b-col class="statsCell">- émit : </b-col></b-row>
-                <b-row ><b-col class="statsCell">- reçu : </b-col></b-row>
-                <b-row ><b-col class="statsCell">- manqué : </b-col></b-row>
+                <b-row><b-col class="titleStatsCell">Nombre de messages : </b-col></b-row>
+                <b-row ><b-col class="statsCell">- Emits : {{Stats.outgoingNb}}</b-col></b-row>
+                <b-row ><b-col class="statsCell">- Reçus : {{Stats.incomingNb}}</b-col></b-row>
               </container>
             </b-col>
             <b-col>
               <container>
-                <b-row class="titleStatsCell"><b-col>Temps moyen des appels :</b-col></b-row>
-                <b-row ><b-col class="statsCell">- reçus : </b-col></b-row>
-                <b-row ><b-col class="statsCell">- émis : </b-col></b-row>
-                <b-row ><b-col class="statsCell">.</b-col></b-row>
+                <b-row><b-col class="titleStatsCell">Pourcentage de messages : </b-col></b-row>
+                <b-row ><b-col class="statsCell">- Emits : {{displayPercentage(Stats.outgoingNb,Stats.totalNb)}}</b-col></b-row>
+                <b-row ><b-col class="statsCell">- Reçus : {{displayPercentage(Stats.incomingNb,Stats.totalNb)}}</b-col></b-row>
               </container>
             </b-col>
           </b-row>
-          <b-row><b-col class="titleStatsCell">Quartiles : </b-col></b-row>
-          <b-row><b-col class="statsCell">Min : </b-col><b-col class="statsCell">Q1 : </b-col></b-row>
-          <b-row><b-col class="statsCell">Médiane : </b-col></b-row>
-          <b-row><b-col class="statsCell">Q3 : </b-col><b-col class="statsCell">Max : </b-col></b-row>
-        </container>
+          </container>
+      </b-col>
+    </b-row>
+    <b-row>
+      <b-col>
+        <div class="chartTitle">Nombre de message par contact</div>
+        <div>
+          <bar-chart
+            id="activityByContactSMS"
+            :data="activityByContact"
+            xkey="name"
+            ykeys='[ "emit","recu" ]'
+            bar-colors='[ "#186717","#152992" ]'
+            :hoverCallback="hoverTextFormatterForActivityByContactSMS"
+            axes="false"
+            stacked="true"
+            grid="true"
+            grid-test-weight="bold"
+            hideHover="true"
+            resize="true"
+          ></bar-chart>
+        </div>
       </b-col>
     </b-row>
     <b-row>
@@ -107,14 +159,47 @@ export default {
           formatter: (value) => { return this.dateFormatter(value) }
         }
       ],
+      activityByContact: [
+        {name: 'Titi', nbOfMsg: 70, emit: 1, recu: 69},
+        {name: 'Riri', nbOfMsg: 15, emit: 8, recu: 7},
+        {name: 'Fifi', nbOfMsg: 50, emit: 31, recu: 19}
+      ],
+      activityOverTheDay: [
+        {hour: 0, nb: 0, emit: 0, recu: 0},
+        {hour: 1, nb: 1, emit: 0, recu: 1},
+        {hour: 2, nb: 2, emit: 1, recu: 1},
+        {hour: 3, nb: 0, emit: 0, recu: 0},
+        {hour: 4, nb: 0, emit: 0, recu: 0},
+        {hour: 5, nb: 0, emit: 0, recu: 0},
+        {hour: 6, nb: 0, emit: 0, recu: 0},
+        {hour: 7, nb: 0, emit: 0, recu: 0},
+        {hour: 8, nb: 0, emit: 0, recu: 0},
+        {hour: 9, nb: 0, emit: 0, recu: 0},
+        {hour: 10, nb: 0, emit: 0, recu: 0},
+        {hour: 11, nb: 0, emit: 0, recu: 0},
+        {hour: 12, nb: 0, emit: 0, recu: 0},
+        {hour: 13, nb: 0, emit: 0, recu: 0},
+        {hour: 14, nb: 0, emit: 0, recu: 0},
+        {hour: 15, nb: 0, emit: 0, recu: 0},
+        {hour: 16, nb: 0, emit: 0, recu: 0},
+        {hour: 17, nb: 0, emit: 0, recu: 0},
+        {hour: 18, nb: 0, emit: 0, recu: 0},
+        {hour: 19, nb: 0, emit: 0, recu: 0},
+        {hour: 20, nb: 0, emit: 0, recu: 0},
+        {hour: 21, nb: 0, emit: 0, recu: 0},
+        {hour: 22, nb: 0, emit: 0, recu: 0},
+        {hour: 23, nb: 0, emit: 0, recu: 0}
+      ],
+      activityOverTime: [
+        {day: 1501100000000, nb: 2, emit: 1, recu: 1},
+        {day: 1501186400000, nb: 2, emit: 0, recu: 2},
+        {day: 1501272800000, nb: 20, emit: 15, recu: 5},
+        {day: 1501359200000, nb: 6, emit: 2, recu: 4}
+      ],
       firstDate: 14,
       cursorStart: 14,
       cursorEnd: 86400014,
-      lastDate: 86400014,
-      traqueur: 0,
-      traqueur2: 0,
-      traqueur3: 0,
-      traqueur4: 0
+      lastDate: 86400014
     }
   },
   mounted () {
@@ -128,19 +213,110 @@ export default {
   components: { BarChart, DatePicker },
   watch: {
     cursorStart: function () {
+      this.generateActivityOverTime()
+      this.generateActivityOverTheDay()
     },
     cursorEnd: function () {
-
+      this.generateActivityOverTime()
+      this.generateActivityOverTheDay()
     },
     activeUser: async function () {
       this.fetchAndProcessSMSData()
     },
     SMSs: function () {
+
+      let result = []
+      for (let i = 0; i < this.SMSs.length; i++) {
+        let SMSsEntry = this.SMSs[i]
+        // is the entry related to a result entry?
+        let isInResult = false
+
+        for (let j = 0; !isInResult && j < result.length; j++) {
+          if (result[j].name === SMSsEntry.name) {
+            isInResult = true
+            result[j].nbOfMsg++
+            if (SMSsEntry.type === 'Emit') {
+              result[j].emit++
+            } else if (SMSsEntry.type === 'Reçu') {
+              result[j].recu++
+            }
+          }
+        }
+        // if false : create new entry else update related entry
+        if (!isInResult) {
+          if (SMSsEntry.type === 'Emit') {
+            result.push(
+              {name: SMSsEntry.name, nbOfMsg: 1, emit: 1, recu: 0}
+            )
+          } else if (SMSsEntry.type === 'Reçu') {
+            result.push(
+              {name: SMSsEntry.name, nbOfMsg: 1, emit: 0, recu: 1}
+            )
+          }
+        }
+      }
+      this.activityByContact = result
+
       this.cursorStart = this.firstDate
       this.cursorEnd = this.lastDate
+      this.generateActivityOverTime()
+      this.generateActivityOverTheDay()
     }
   },
   methods: {
+    generateActivityOverTime () {
+      let result = []
+      // initialize result object
+      // get the start of the day from cursorStart
+      let tempDate = (new Date(this.cursorStart) + '').substring(0, 15)
+      let cursorStartOfDay = new Date(tempDate).getTime()
+      let cursorEndLong = new Date(this.cursorEnd).getTime()
+      let numberOfEntry = Math.trunc((cursorEndLong - cursorStartOfDay) / 86400000)
+      for (let j = 0; j < numberOfEntry; j++) {
+        result.push({ day: (cursorStartOfDay + j * 86400000), nb: 0, emit: 0, recu: 0 })
+      }
+      // for every collLog in time range
+      for (let i = 0; i < this.SMSs.length; i++) {
+        let endOfTheDayOfEndCursor = (new Date(this.cursorEnd).getTime()) + 86400000
+        if ((this.SMSs[i].date >= new Date(this.cursorStart).getTime()) && (this.SMSs[i].date <= (endOfTheDayOfEndCursor))) {
+          let hasToBeProcessed = true
+
+          for (let k = 0; hasToBeProcessed && (k < result.length); k++) {
+            if (this.SMSs[i].date < result[k].day + 86400000) {
+              hasToBeProcessed = false
+              result[k].nb++
+              if (this.SMSs[i].type === 'Reçu') {
+                result[k].recu++
+              } else if (this.SMSs[i].type === 'Emit') {
+                result[k].emit++
+              }
+            }
+          }
+        }
+      }
+      this.activityOverTime = result
+    },
+    generateActivityOverTheDay () {
+      let result = []
+      // initialize result object
+      for (let i = 0; i < 24; i++) {
+        result.push({hour: i, nb: 0, emit: 0, recu: 0})
+      }
+      // modify proper result entry if the entry qualify for selected time selection
+      for (let i = 0; i < this.SMSs.length; i++) {
+        let endOfTheDayOfEndCursor = (new Date(this.cursorEnd).getTime()) + 86400000
+        if ((this.SMSs[i].date >= new Date(this.cursorStart).getTime()) && (this.SMSs[i].date <= (endOfTheDayOfEndCursor))) {
+          let resultEntryToUpdate = new Date(this.SMSs[i].date).getHours()
+          result[resultEntryToUpdate].nb++
+          if (this.SMSs[i].type === 'Reçu') {
+            result[resultEntryToUpdate].recu++
+          } else if (this.SMSs[i].type === 'Emit') {
+            result[resultEntryToUpdate].emit++
+          }
+        }
+      }
+      this.activityOverTheDay = result
+    },
     async fetchAndProcessSMSData () {
       const response = await FetchService.fetchSMS({ UserId: this.$store.state.activeUser })
       let responseData = response.data
@@ -245,6 +421,27 @@ export default {
       let result = ''
       result = result + Math.round((q / tot) * 1000) / 10
       return result + ' %'
+    },
+    hoverTextFormatterForActivityByContactSMS (index, options, content, row) {
+      let txt = '<b>' +  row.name + ' </b>'
+        + '<br/> Messages émits : <font color="#00bfff">' + row.emit + ' (' + this.displayPercentage(row.emit, row.nbOfMsg) + ')'  +  '</font>'
+        + '<br/> Messages reçus : <font color="#00bfff">' + row.recu + ' (' + this.displayPercentage(row.recu, row.nbOfMsg) + ')'  + '</font>'
+        + '<br/> Total messages : <font color="#00bfff">' + row.nbOfMsg + '</font>'
+      return txt
+    },
+    hoverTextFormatterForActivityOverTheDaySMS (index, options, content, row) {
+      let txt = '<b>' +  row.hour + ' h </b>'
+        + '<br/> Messages émits : <font color="#00bfff">' + row.emit + ' (' + this.displayPercentage(row.emit, row.nb) + ')'  +  '</font>'
+        + '<br/> Messages reçus : <font color="#00bfff">' + row.recu + ' (' + this.displayPercentage(row.recu, row.nb) + ')'  + '</font>'
+        + '<br/> Total messages : <font color="#00bfff">' + row.nb + '</font>'
+      return txt
+    },
+    hoverTextFormatterForActivityOverTimeSMS (index, options, content, row) {
+      let txt = '<b>' +  Diver.dateFormatter('#DDD# #DD# #MMMM# #YYYY#', row.day) + ' </b>'
+        + '<br/> Messages émits : <font color="#00bfff">' + row.emit + ' (' + this.displayPercentage(row.emit, row.nb) + ')'  +  '</font>'
+        + '<br/> Messages reçus : <font color="#00bfff">' + row.recu + ' (' + this.displayPercentage(row.recu, row.nb) + ')'  + '</font>'
+        + '<br/> Total messages : <font color="#00bfff">' + row.nb + '</font>'
+      return txt
     }
   }
 }
