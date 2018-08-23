@@ -8,6 +8,7 @@ import BluetoothCharts from '@/pages/BluetoothCharts'
 import BatteryCharts from '@/pages/BatteryCharts'
 import CallLogsStats from '@/pages/CallLogsStats'
 import SMSCharts from '@/pages/SMSCharts'
+import Geolocation from '@/pages/Geolocation'
 
 Vue.use(Router)
 
@@ -52,6 +53,11 @@ export default new Router({
       path: '/SMS',
       name: 'SMSCharts',
       component: SMSCharts
+    },
+    {
+      path: '/geolocation',
+      name: 'Geolocation',
+      component: Geolocation
     }
   ]
 })
