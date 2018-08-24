@@ -8,12 +8,12 @@
       <b-col class="title"><div>Page 2</div></b-col>
     </b-row>
     <b-row align-h="center" >
-      <b-col class="span" cols="5"><img src=".././assets/logo.png" height="150px"></b-col>
-      <b-col class="span" cols="5"><img src=".././assets/logo.png" height="150px"></b-col>
+      <b-col class="span" cols="5"><router-link to="/geolocation"><img src=".././assets/logo-loc-gps.png" height="150px"></router-link></b-col>
+      <b-col class="span" cols="5"><img src=".././assets/logo-loc-cell.png" height="150px"></b-col>
     </b-row>
     <b-row align-h="center" >
-      <b-col class="span" cols="5"><img src=".././assets/logo.png" height="150px"></b-col>
-      <b-col class="span" cols="5"><img src=".././assets/logo.png" height="150px"></b-col>
+      <b-col class="span" cols="5"><img src=".././assets/logo-loc-wifi.png" height="150px"></b-col>
+      <b-col class="span" cols="5"><img src=".././assets/logo-loc-gps-2.png" height="150px"></b-col>
     </b-row>
   </container>
 </template>

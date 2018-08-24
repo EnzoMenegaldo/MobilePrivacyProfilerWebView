@@ -9,7 +9,7 @@
                 <img src=".././assets/droid-icon.png" height="45px" @click="changeActiveTab()">
               </b-col>
               <b-col>
-                <txt class="txt" @click="changeActiveTab()"> Mobile Privacy</txt>
+                <txt class="txt" @click="changeActiveTab()"> Mobile Privacy Profiler</txt>
               </b-col>
             </b-row>
           </container>

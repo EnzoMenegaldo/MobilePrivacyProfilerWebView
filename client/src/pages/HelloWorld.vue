@@ -3,7 +3,7 @@
     <div class="spacer"></div>
     <div class="spacer"></div>
     <h1>{{ msg }}</h1>
-    <h2>Application web de consultation des données de l'étude Mobile Privacy</h2>
+    <h2>Application web de consultation des données de l'étude Mobile Privacy Profiler</h2>
   </div>
 </template>
 
@@ -12,7 +12,7 @@ export default {
   name: 'HelloWorld',
   data () {
     return {
-      msg: 'Bienvenus sur Mobile Privacy Webview'
+      msg: 'Bienvenus sur Mobile Privacy Profiler Webview'
     }
   }
 }

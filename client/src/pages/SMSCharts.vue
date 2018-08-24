@@ -270,7 +270,7 @@ export default {
       let tempDate = (new Date(this.cursorStart) + '').substring(0, 15)
       let cursorStartOfDay = new Date(tempDate).getTime()
       let cursorEndLong = new Date(this.cursorEnd).getTime()
-      let numberOfEntry = Math.trunc((cursorEndLong - cursorStartOfDay) / 86400000)
+      let numberOfEntry = Math.trunc((cursorEndLong - cursorStartOfDay) / 86400000) + 1
       for (let j = 0; j < numberOfEntry; j++) {
         result.push({ day: (cursorStartOfDay + j * 86400000), nb: 0, emit: 0, recu: 0 })
       }

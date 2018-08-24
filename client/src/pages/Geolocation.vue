@@ -2,7 +2,7 @@
   <container v-on:mouseover="resize()">
     <b-row class="firstRow" align-h="center">
       <b-clo>
-        <router-link to="/Data1"><div class="returnBtn">Retour</div></router-link>
+        <router-link to="/Data2"><div class="returnBtn">Retour</div></router-link>
       </b-clo>
     </b-row>
     <b-row align-h="center">
