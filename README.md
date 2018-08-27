@@ -25,14 +25,16 @@ L'application à été réalisée après avoir suivit les tutoriels suivants
 ### Organisation du code
 Attention de ne pas confondre ici les parties de code qui seront interprétés côté serveur et côté client.
 
-###index.html
+### index.html
+
 Il s'agit de la page web "d'origine" : tous les éléments visibles sont insérés à la place de la balise
 
 ````
 <div id="app"></div>
 
 ````
-###main.js
+### main.js
+
 Il s'agit du fichier exécuté en premier lors de l'exécution du code JS.
 On lui demande ici de charger l'élément App.vue qui affiche les éléments à présenter
 
@@ -46,7 +48,8 @@ new Vue({
 
 ````
 
-###App.vue
+### App.vue
+
 On y retrouve l'architecture des fichiers Vue 
 
 ````
