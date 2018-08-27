@@ -21,8 +21,10 @@ L'application à été réalisée après avoir suivit les tutoriels suivants
 
 - [Tutoriel : Build full stack web apps with MEVN Stack](https://medium.com/@anaida07/mevn-stack-application-part-1-3a27b61dcae0)
 - [Exemple : Application fonctionelle avec Vue.js](https://github.com/mazipan/chucknorris/blob/master/README.md)
+
 ### Organisation du code
 Attention de ne pas confondre ici les parties de code qui seront interprétés côté serveur et côté client.
+
 ###index.html
 Il s'agit de la page web "d'origine" : tous les éléments visibles sont insérés à la place de la balise
 
