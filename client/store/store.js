@@ -21,11 +21,11 @@ export const mutations = {
 }
 
 export const getters = {
-  getActiveUser ( state ) {
-    return state.activeUser
+  getActiveUser () {
+    return this.state.activeUser
   },
-  getActiveTab ( state ) {
-    return state.activeTab
+  getActiveTab () {
+    return this.state.activeTab
   }
 }
 
