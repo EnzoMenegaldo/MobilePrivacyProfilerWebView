@@ -25,6 +25,7 @@ L'application à été réalisée après avoir suivit les tutoriels suivants
 Attention de ne pas confondre ici les parties de code qui seront interprétés côté serveur et côté client.
 ###index.html
 Il s'agit de la page web "d'origine" : tous les éléments visibles sont insérés à la place de la balise
+
 ````
 <div id="app"></div>
 
@@ -32,6 +33,7 @@ Il s'agit de la page web "d'origine" : tous les éléments visibles sont insér�
 ###main.js
 Il s'agit du fichier exécuté en premier lors de l'exécution du code JS.
 On lui demande ici de charger l'élément App.vue qui affiche les éléments à présenter
+
 ````
 new Vue({
   el: '#app',
@@ -41,8 +43,10 @@ new Vue({
 })
 
 ````
+
 ###App.vue
 On y retrouve l'architecture des fichiers Vue 
+
 ````
 <template>
   <div class="VueApp grid__row" id="app">
