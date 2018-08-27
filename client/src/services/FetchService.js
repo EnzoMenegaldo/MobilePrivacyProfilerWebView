@@ -18,5 +18,8 @@ export default {
   },
   fetchSMS (params) {
     return Api().post('SMS', params)
+  },
+  fetchGPSGeolocation (params) {
+    return Api().post('GPSGeolocation', params)
   }
 }

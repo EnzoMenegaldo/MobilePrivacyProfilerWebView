@@ -15,26 +15,6 @@
       </b-clo>
     </b-row>
     <b-row align-h="center">
-      <b-col>
-        <container>
-          <b-row><b-col class="titleStatsCell">Date : </b-col></b-row>
-          <b-row ><b-col class="statsCell">- Survol : {{displayedMarker.date}}</b-col></b-row>
-        </container>
-      </b-col>
-      <b-col>
-        <container>
-          <b-row><b-col class="titleStatsCell">Latitude : </b-col></b-row>
-          <b-row ><b-col class="statsCell">- Survol : {{displayedMarker.position.lat}}</b-col></b-row>
-        </container>
-      </b-col>
-      <b-col>
-        <container>
-          <b-row><b-col class="titleStatsCell">Longitude : </b-col></b-row>
-          <b-row ><b-col class="statsCell">- Survol : {{displayedMarker.position.lng}}</b-col></b-row>
-        </container>
-      </b-col>
-    </b-row>
-    <b-row align-h="center">
       <b-clo>
         <l-map :zoom="zoom"
                :center="center"
@@ -44,15 +24,52 @@
           <l-tile-layer :url="url"
                         :attribution="attribution"
           />
-          <l-marker v-for="marker in markers"
-                    v-bind:key="marker.date"
-                      :draggable="marker.draggable"
-                      :lat-lng="marker.position"
-                      @mouseout="resetMarkerDate"
-                      @mouseover="displayMarkerDate(marker)"
+          <marker-popup
+            v-for="marker in markers"
+            v-bind:key="marker.date"
+              :position="marker.position"
+              :text="marker.extraText"
+              :title="marker.date"
+              @mouseout="resetMarkerDate"
+              @mouseover="displayMarkerDate(marker)"/>
+          <!--
+          <l-marker
+            v-for="marker in markers"
+            v-bind:key="marker.date"
+              :draggable="marker.draggable"
+              :lat-lng="marker.position"
+              @mouseout="resetMarkerDate"
+              @mouseover="displayMarkerDate(marker)"
           />
+          -->
         </l-map>
       </b-clo>
+    </b-row>
+    <b-row align-h="center">
+      <b-col>
+        <container>
+          <b-row><b-col class="titleStatsCell">Date : </b-col></b-row>
+          <b-row ><b-col class="statsCell">{{dateFormatter(displayedMarker.date)}}</b-col></b-row>
+        </container>
+      </b-col>
+      <b-col>
+        <container>
+          <b-row><b-col class="titleStatsCell">Latitude : </b-col></b-row>
+          <b-row ><b-col class="statsCell">{{displayedMarker.position.lat}}</b-col></b-row>
+        </container>
+      </b-col>
+      <b-col>
+        <container>
+          <b-row><b-col class="titleStatsCell">Longitude : </b-col></b-row>
+          <b-row ><b-col class="statsCell">{{displayedMarker.position.lng}}</b-col></b-row>
+        </container>
+      </b-col>
+      <b-col>
+        <container>
+          <b-row><b-col class="titleStatsCell">Extra texte : </b-col></b-row>
+          <b-row ><b-col class="statsCell">{{displayedMarker.extraText}}</b-col></b-row>
+        </container>
+      </b-col>
     </b-row>
   </container>
 </template>
@@ -61,6 +78,9 @@
 /* global L */
 /* eslint no-undef: "error" */
 
+import MarkerPopup from '@/components/MarkerPopup'
+import Diver from '@/services/Diver'
+import FetchService from '@/services/FetchService'
 import 'leaflet/dist/leaflet.css'
 import { LMap, LTileLayer, LMarker } from 'vue2-leaflet'
 
@@ -77,7 +97,8 @@ export default {
   components: {
     LMap,
     LTileLayer,
-    LMarker
+    LMarker,
+    MarkerPopup
   },
   data () {
     return {
@@ -88,25 +109,90 @@ export default {
       url: 'http://{s}.tile.osm.org/{z}/{x}/{y}.png',
       attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
       markers: [
-        { position: L.latLng(47.413220, -1.219482), date: 'Marker 1', draggable: true },
-        { position: L.latLng(47.313220, -1.219482), date: 'Marker 2', draggable: false }
+        { position: L.latLng(47.413220, -1.219482), date: 'Marker 1', extraText: ' ', draggable: true },
+        { position: L.latLng(47.313220, -1.219482), date: 'Marker 2', extraText: ' ', draggable: false }
       ],
-      displayedMarker: { position: L.latLng(0, 0), date: 'Na', draggable: false },
-      blankMarker: { position: L.latLng(0, 0), date: 'Na', draggable: false },
+      displayedMarker: { position: L.latLng(0, 0), date: 'Na', extraText: '.', draggable: false },
+      blankMarker: { position: L.latLng(0, 0), date: 'Na', extraText: '.', draggable: false },
       popupTarget: null,
       traqueur: 0,
       traqueur2: 0,
       traqueur3: 0,
-      traqueur4: 0
+      traqueur4: 0,
+      firstDate: 14,
+      cursorStart: 14,
+      cursorEnd: 86400014,
+      lastDate: 86400014,
+      GPSGeolocationMarkerList: [ { position: L.latLng(0, 0), date: 'Na', extraText: '', draggable: false }
+      ],
+      WifiGeolocationMarkerList: [ { position: L.latLng(0, 0), date: 'Na', extraText: '', draggable: false }
+      ],
+      CellGeolocationMarkerList: [ { position: L.latLng(0, 0), date: 'Na', extraText: '', draggable: false }
+      ]
     }
   },
   computed: {
+    activeUser: function () {
+      return this.$store.state.activeUser
+    }
+  },
+  watch: {
+    activeUser: async function () {
+      this.fetchAndProcessGPSGeolocationData()
+    }
   },
   mounted () {
+    this.fetchAndProcessGPSGeolocationData()
   },
   methods: {
     resize () {
       window.dispatchEvent(new Event('resize'))
+    },
+    async fetchAndProcessGPSGeolocationData () {
+      const response = await FetchService.fetchGPSGeolocation({ UserId: this.$store.state.activeUser })
+      let responseData = response.data
+      let dataToDisplay = []
+      let firstDate = null
+      let lastDate = null
+      // for each GPSGeolocation row
+      for (let i = 0; i < responseData.length; i++) {
+        // prepare item parameter
+        let latitude = 0
+        let longitude = 0
+        let date = -1
+        let extraText = ''
+
+        let obj = responseData[i]
+
+        latitude = obj.latitude
+        longitude = obj.longitude
+        date = Number(obj.date)
+        extraText = '<b>' + this.dateFormatter(date) + '</b><br/>' +
+          'Latitude : ' + latitude + '</b><br/>' +
+          'Longitude : ' + longitude + '</b><br/>' +
+          'Précision : ' + obj.precision + ', Altitude : ' + obj.altitude + ' (Précision : ' + obj.verticalPrecision + ')'
+        if (firstDate === -1 || date < firstDate) { firstDate = date }
+        if (lastDate === -1 || date > lastDate) { lastDate = date }
+
+        dataToDisplay.push(
+          { 'position': L.latLng(latitude, longitude),
+            'date': date,
+            'extraText': extraText,
+            'draggable': false }
+        )
+      } // end forEach GPSGeolocation row
+
+      this.firstDate = Number(firstDate)
+      this.cursorStart = Number(firstDate)
+      this.lastDate = Number(lastDate)
+      this.cursorEnd = Number(lastDate)
+
+      this.GPSGeolocationMarkerList = dataToDisplay
+      this.markers = dataToDisplay
+    },
+    dateFormatter (millisecondDate) {
+      if (millisecondDate === 'Na') { return 'Na' }
+      return Diver.dateFormatter('#hhh# h #mm# le #DDD# #DD# #MMMM# #YYYY#', millisecondDate)
     },
     displayMarkerDate (marker) {
       this.displayedMarker = marker
