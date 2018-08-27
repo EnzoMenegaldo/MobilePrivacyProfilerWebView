@@ -46,7 +46,7 @@ On y retrouve l'architecture des fichiers Vue
 ````
 <template>
   <div class="VueApp grid__row" id="app">
-    <!-- Ici l'affichage en HTML -->
+    // Ici l'affichage en HTML 
     <header-section/>
     
     <tab-section v-bind:activeTab = "activeTab" />
