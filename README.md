@@ -83,7 +83,9 @@ name: 'App', // nom du module
 // Ici les classes css pour les éléments de la page et les éléments fils
 }
 </style>
+
 ````
+
 Attention : pour bien commencer avec Vue.js voir : [ici](https://fr.vuejs.org/v2/guide/instance.html#Diagramme-du-cycle-de-vie)
 (Le cycle de vie est important à garder en tête)
 ### Store
