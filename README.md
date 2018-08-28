@@ -95,35 +95,49 @@ name: 'App', // nom du module
 
 Attention : pour bien commencer avec Vue.js voir : [ici](https://fr.vuejs.org/v2/guide/instance.html#Diagramme-du-cycle-de-vie)
 (Le cycle de vie est important à garder en tête)
+
 ### Store
+
 On trouve ici des variables globales qui ont pour but d'être partagées dans toute l'application web (variables d'états)
 On y trouve l'utilisateur actif ainsi que l'onglet actif.
 <br/> Le fichier est construit en trois parties:
 - **state :** qui regroupe les états
 - **mutation :** qui regroupe les méthodes de changement d'état (permet un débug facilité par écriture dans la console en cas de mode débug actif)
 - **getters :** qui permettent l'accès aux variables des états du store
+
 ### "router"
+
 Il regroupe l'ensemble des API du serveur d'affichage (client)
-Il permet de remplacer la balise : ````<router-view/>```` de App.vue par une vue définie ailleurs (cf import) lors de l'appel d'une url différente ex : ````http://localhost:8080/#/SelectUser```` 
+Il permet de remplacer la balise : ````<router-view/>```` de App.vue par une vue définie ailleurs (cf "import") lors de l'appel d'une url différente ex : ````http://localhost:8080/#/SelectUser```` 
+
 ### "components" et "pages"
+
  Il n'y a pas de différence de nature entre les fichiers présents dans ces deux répertoires.
  Tout comme App.vue, il s'agit de fichiers où l'on trouve les trois composantes d'un fichier vue (html, javaScript et css)
  <br/>Cependant, les fichiers présents dans "components" sont utilisés comme éléments de pages
  <br/>Les "pages" sont des éléments accessibles par le "router"
+
 ### Ajouter une page
+
 - il faut créer un nouveau fichier Vue
 - l'ajourer au fichier "router"
-- le rendre accessible à la navigation (voire Data1/2) : <br/>ex : ````<router-link to="/bluetooth">````
+- le rendre accessible à la navigation (voir Data1/2) : <br/>ex : ````<router-link to="/bluetooth">````
+
 ### Développer une page
+
 le but est de construire des listes et des paramètres à afficher dans la partie html
  - Pour récupérer des données brut, une requête est réalisée à la partie serveur via une méthode de services/FetchService.js
  - Le JSON obtenus en réponse est ensuite transformé en données affichables
  - Pour afficher un contenu lors du premier chargement, voir la composante ['mounted'](https://fr.vuejs.org/v2/api/#mounted)
- - Pour assurer l'actualisation de l'affichage, vis-à-vis de variable pouvant être changées, la composante ['watch'](https://fr.vuejs.org/v2/api/#watch) est à utiliser
+ - Pour assurer l'actualisation de l'affichage, vis-à-vis de variable pouvant être changées, voir la composante ['watch'](https://fr.vuejs.org/v2/api/#watch) est à utiliser
+
 ### Api.js
+
 services/Api.js est un fichier qui permet de définir la cible des requêtes http, réalisées par le FetchService.js, à la composante "server".
 <br/>```` 8      baseURL: `http://localhost:8081`  ````
+
 ### Principales librairies utilisées
+
  - [Vue-Morris.js](https://github.com/bbonnin/vue-morris):
     - [LineChart](https://morrisjs.github.io/morris.js/lines.html)
     - [BarChart](https://morrisjs.github.io/morris.js/bars.html)
@@ -131,26 +145,33 @@ services/Api.js est un fichier qui permet de définir la cible des requêtes htt
     - [exemples](https://mengxiong10.github.io/vue2-datepicker/demo/index.html)
  - [Vue2leaflet.js](https://github.com/KoRiGaN/Vue2Leaflet)
     - [exemples](https://korigan.github.io/Vue2Leaflet/) 
+    
 ### Futur développements
+
 La page Geolocation est encore en cours de développement.
 Il faudra convertir les entrées correspondantes aux cell (antennes relais téléphone) et bornes wifi en positions GPS exploitables
 <br/>GPS : voir opencellid.org avec [ceci](http://wiki.opencellid.org/wiki/API) et [cela](https://www.opencellid.org/#zoom=16&lat=48.16751&lon=-1.57774)
 <br/> ... et plus
+
 ## Serveur
+
 Il a pour but d'assurer l'accès aux données de la base. Il reçoit des requêtes et renvoi les résultats des interrogations à la base au format JSON
 Il n'est composé que d'un seul fichier d'intérêt : server/app.js
 
 ### Réglage du port d'écoute
+
 Le port d'écoute peut être changé par la modification de la ligne suivante :
 ````
 144    app.listen(process.env.PORT || 8081)
 ````
 ### Réglage de l'adresse de la base de données
+
 L'adresse du fichier de la base de données à consulter peut être modifié par la modification de la ligne suivante :
 ````
 8   var dbAdress = 'custom/path/folder.db'
 ````
 ### Répondre à une nouvelle API
+
 Pour créer une nouvelle requête d'interrogation de la base de données, suivre le schéma suivant
 ````
 app.post('/CustomPath', (req, res) => {
@@ -171,3 +192,7 @@ app.post('/CustomPath', (req, res) => {
     })
 })
 ````
+
+### Principales librairies utilisées
+
+ - [sqlite3.js](https://www.npmjs.com/package/sqlite3)
