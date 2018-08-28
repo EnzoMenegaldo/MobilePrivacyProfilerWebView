@@ -5,22 +5,22 @@ Le projet est divisé en deux segments :
 - Client :
 Il contient un serveur node.js ainsi que le code de l'affichage client grâce à Vue.js
 - Serveur :
-Il est le seul point de jonction avec la base de données. Le client envoi des requêtes POST à l'attention du serveur pour recevoir en retour les réponses au format JSON
+Il est le seul point de jonction avec la base de données. Le client envoie des requêtes POST à l'attention du serveur pour recevoir en retour les réponses au format JSON
 
 ## Mise en route
-* Le projet à été développé sous intelIJ.
-* La gestion du lancement des serveurs et de l'installation des paquets est réalisé à l'aide de npm.
-* Le lancement des serveurs est réalisé à l'aide de scripts NPM:
+* Le projet a été développé sous intelIJ.
+* La gestion du lancement des serveurs et de l'installation des paquets est réalisée à l'aide de npm.
+* Le lancement des serveurs est réalisée à l'aide de scripts NPM :
 * Pour les lancer : <br/>
  ouvrir le fichier package.json => click droit sur le titre de l'onglet => "Show npm scripts"
 
 ## Dossier gitLab
 Le repository est disponible [ici](https://gitlab.inria.fr/mobile-privacy-profiler/MobilePrivacyProfilerWebView)
 ## Client
-L'application à été réalisée après avoir suivit les tutoriels suivants
+L'application a été réalisée après avoir suivi les tutoriels suivants
 
 - [Tutoriel : Build full stack web apps with MEVN Stack](https://medium.com/@anaida07/mevn-stack-application-part-1-3a27b61dcae0)
-- [Exemple : Application fonctionelle avec Vue.js](https://github.com/mazipan/chucknorris/blob/master/README.md)
+- [Exemple : Application fonctionnelle avec Vue.js](https://github.com/mazipan/chucknorris/blob/master/README.md)
 
 ### Organisation du code
 Attention de ne pas confondre ici les parties de code qui seront interprétés côté serveur et côté client.
@@ -71,7 +71,7 @@ On y retrouve l'architecture des fichiers Vue
 <script>
 // Ici le code javaScript
 name: 'App', // nom du module
-  store, // variable de la vue (qui sera donc globale)
+  store, // variable de la vue "racine" (qui sera donc globale)
   components: { // Modules à charger présents dans le code HTMAL
     HeaderSection,
     TabSection
@@ -100,27 +100,29 @@ On trouve ici des variables globales qui ont pour but d'être partagées dans to
 On y trouve l'utilisateur actif ainsi que l'onglet actif.
 <br/> Le fichier est construit en trois parties:
 - **state :** qui regroupe les états
-- **mutation :** qui regroupe les méthodes de changement d'état (permet un débug facilité par écriture dans la lonsole en cas de mode débug actif)
+- **mutation :** qui regroupe les méthodes de changement d'état (permet un débug facilité par écriture dans la console en cas de mode débug actif)
 - **getters :** qui permettent l'accès aux variables des états du store
 ### "router"
 Il regroupe l'ensemble des API du serveur d'affichage (client)
-Il permet de remplacer la balise : ````<router-view/>```` de App.vue par une vue définie ailleur (cf import) lors de l'appel d'une url différante ex : ````http://localhost:8080/#/SelectUser```` 
+Il permet de remplacer la balise : ````<router-view/>```` de App.vue par une vue définie ailleurs (cf import) lors de l'appel d'une url différente ex : ````http://localhost:8080/#/SelectUser```` 
 ### "components" et "pages"
- Il n'y a as de différence de nature entre les fichiers présents dans ces deux répertoires.
+ Il n'y a pas de différence de nature entre les fichiers présents dans ces deux répertoires.
  Tout comme App.vue, il s'agit de fichiers où l'on trouve les trois composantes d'un fichier vue (html, javaScript et css)
  <br/>Cependant, les fichiers présents dans "components" sont utilisés comme éléments de pages
- <br/>Les "pages" sont des éléments acessibles par le "router"
-### ajouter une page
+ <br/>Les "pages" sont des éléments accessibles par le "router"
+### Ajouter une page
 - il faut créer un nouveau fichier Vue
 - l'ajourer au fichier "router"
-- le rendre accessible à la navigation : <br/>ex : ````<router-link to="/bluetooth">````
-### développer une page
+- le rendre accessible à la navigation (voire Data1/2) : <br/>ex : ````<router-link to="/bluetooth">````
+### Développer une page
 le but est de construire des listes et des paramètres à afficher dans la partie html
- - Pour récupérer des données brut, une requête est réalisée à la partie server via une méthode de services/FetchService.js
- - Le JSON obtenu en réponse est en suite transformé en données affichables
- - Pour afficher un contenu lors du permier chargement, voir la composante 'mounted'
- - Pour assurer l'actualisation de l'affichage, la composante 'watch' est à utiliser
-
+ - Pour récupérer des données brut, une requête est réalisée à la partie serveur via une méthode de services/FetchService.js
+ - Le JSON obtenus en réponse est ensuite transformé en données affichables
+ - Pour afficher un contenu lors du premier chargement, voir la composante ['mounted'](https://fr.vuejs.org/v2/api/#mounted)
+ - Pour assurer l'actualisation de l'affichage, vis-à-vis de variable pouvant être changées, la composante ['watch'](https://fr.vuejs.org/v2/api/#watch) est à utiliser
+### Api.js
+services/Api.js est un fichier qui permet de définir la cible des requêtes http, réalisées par le FetchService.js, à la composante "server".
+<br/>```` 8      baseURL: `http://localhost:8081`  ````
 ### Principales librairies utilisées
  - [Vue-Morris.js](https://github.com/bbonnin/vue-morris):
     - [LineChart](https://morrisjs.github.io/morris.js/lines.html)
@@ -129,13 +131,14 @@ le but est de construire des listes et des paramètres à afficher dans la parti
     - [exemples](https://mengxiong10.github.io/vue2-datepicker/demo/index.html)
  - [Vue2leaflet.js](https://github.com/KoRiGaN/Vue2Leaflet)
     - [exemples](https://korigan.github.io/Vue2Leaflet/) 
-### futur développements
+### Futur développements
 La page Geolocation est encore en cours de développement.
-Il faudra convertir les entrées correspondantes aux cell (antennes relait téléphone) et borens wifi en positions GPS exploitables
+Il faudra convertir les entrées correspondantes aux cell (antennes relais téléphone) et bornes wifi en positions GPS exploitables
 <br/>GPS : voir opencellid.org avec [ceci](http://wiki.opencellid.org/wiki/API) et [cela](https://www.opencellid.org/#zoom=16&lat=48.16751&lon=-1.57774)
 <br/> ... et plus
 ## Serveur
-Il n'est composé que d'un seul fichier d'intéret : server/app.js
+Il a pour but d'assurer l'accès aux données de la base. Il reçoit des requêtes et renvoi les résultats des interrogations à la base au format JSON
+Il n'est composé que d'un seul fichier d'intérêt : server/app.js
 
 ### Réglage du port d'écoute
 Le port d'écoute peut être changé par la modification de la ligne suivante :
@@ -148,7 +151,7 @@ L'adresse du fichier de la base de données à consulter peut être modifié par
 8   var dbAdress = 'custom/path/folder.db'
 ````
 ### Répondre à une nouvelle API
-Pour créer une nouvelle requête d'interrogation de la base de données, suivre le schema suivant
+Pour créer une nouvelle requête d'interrogation de la base de données, suivre le schéma suivant
 ````
 app.post('/CustomPath', (req, res) => {
     db = startConnection (dbAdress)
