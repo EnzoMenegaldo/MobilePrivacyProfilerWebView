@@ -7,7 +7,7 @@
     </b-row>
     <b-row align-h="center">
       <b-clo>
-        <div class="title">Suivit de la batterie</div>
+        <div class="title">Suivi de la batterie</div>
       </b-clo>
     </b-row>
     <b-row align-h="center">

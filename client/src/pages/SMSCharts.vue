@@ -16,7 +16,7 @@
     </b-row>
     <b-row>
       <b-col>
-        <div class="chartTitle">Nombre de message par heure de la journée</div>
+        <div class="chartTitle">Nombre de message par jour</div>
         <div>
           <bar-chart
             id="activityOverTimeSMS"

@@ -12,7 +12,7 @@ export default {
   name: 'HelloWorld',
   data () {
     return {
-      msg: 'Bienvenus sur Mobile Privacy Profiler Webview'
+      msg: 'Bienvenue sur Mobile Privacy Profiler Webview'
     }
   }
 }

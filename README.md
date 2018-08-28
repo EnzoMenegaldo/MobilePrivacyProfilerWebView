@@ -31,7 +31,6 @@ Il s'agit de la page web "d'origine" : tous les éléments visibles sont insér�
 
 ````
 <div id="app"></div>
-
 ````
 ### main.js
 
@@ -45,7 +44,6 @@ new Vue({
   components: { App },
   template: '<App/>'
 })
-
 ````
 
 ### App.vue
@@ -122,6 +120,15 @@ le but est de construire des listes et des paramètres à afficher dans la parti
  - Le JSON obtenu en réponse est en suite transformé en données affichables
  - Pour afficher un contenu lors du permier chargement, voir la composante 'mounted'
  - Pour assurer l'actualisation de l'affichage, la composante 'watch' est à utiliser
+
+### Principales librairies utilisées
+ - [Vue-Morris.js](https://github.com/bbonnin/vue-morris):
+    - [LineChart](https://morrisjs.github.io/morris.js/lines.html)
+    - [BarChart](https://morrisjs.github.io/morris.js/bars.html)
+ - [Vue2-datepicker.js](https://www.npmjs.com/package/vue2-datepicker/v/1.4.1)
+    - [exemples](https://mengxiong10.github.io/vue2-datepicker/demo/index.html)
+ - [Vue2leaflet.js](https://github.com/KoRiGaN/Vue2Leaflet)
+    - [exemples](https://korigan.github.io/Vue2Leaflet/) 
 ### futur développements
 La page Geolocation est encore en cours de développement.
 Il faudra convertir les entrées correspondantes aux cell (antennes relait téléphone) et borens wifi en positions GPS exploitables
